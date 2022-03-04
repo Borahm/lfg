@@ -1,0 +1,36 @@
+[
+{
+  "model": "projects.project",
+  "pk": 1,
+  "fields": {
+    "owner": 1,
+    "title": "Group travel planning app",
+    "tldr": "Make it easier to plan trips with a group",
+    "description": "Everyone knows how hard it is to plan trips with friends. It will collect feedback, remind people to fill out things and collect money from everyone",
+    "status": "IDEATING",
+    "hero_image": "image.png",
+    "project_images": "image.png",
+    "members": [
+      1,
+      2,
+      3
+    ]
+  }
+},
+{
+  "model": "projects.project",
+  "pk": 2,
+  "fields": {
+    "owner": 2,
+    "title": "Find a wedding venue",
+    "tldr": "Everyone knows how hard it is to find a wedding venue",
+    "description": "We are making it a lot easier for everyone to find venues that you love",
+    "status": "BUILDING",
+    "hero_image": "image.png",
+    "project_images": "image.png",
+    "members": [
+      2
+    ]
+  }
+}
+]
