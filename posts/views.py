@@ -56,7 +56,7 @@ class PostListView(APIView):
     def post(self, request):
         request.data["owner"] = request.user.id
         print(request.data)
-        serialized_post = PostSerializer(data=request.data)
+        serialized_post = ProjectSerializer(data=request.data)
         print(serialized_post)
         try:
             serialized_post.is_valid()

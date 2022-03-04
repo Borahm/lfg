@@ -1,12 +1,12 @@
-from rest_framework.authentication import BasicAuthentication
-from rest_framework.exceptions import PermissionDenied
-from django.contrib.auth import get_user_model
-import jwt
-import os
-
-
-# importing settings that also include the secret key
 from django.conf import settings
+# Django's default authentication - we'll extend this
+from rest_framework.authentication import BasicAuthentication
+#  exception when user isn't auth'd
+from rest_framework.exceptions import PermissionDenied
+# importing this to get the active User model
+from django.contrib.auth import get_user_model
+from django.conf import settings  # imports settings that also includes secret key
+import jwt  # import jwt
 
 # User model
 User = get_user_model()
@@ -14,7 +14,7 @@ User = get_user_model()
 
 class JWTAuthentication(BasicAuthentication):
 
-    def authentication(self, request):
+    def authenticate(self, request):
         # Get the token from the header
         header = request.headers.get('Authorization')
 
@@ -22,10 +22,10 @@ class JWTAuthentication(BasicAuthentication):
             return None
 
         if not header.startswith('Bearer'):
-            raise PermissionDenied(detail="Invalid auth token format")
+            raise PermissionDenied(detail="Invalid Token Format")
 
         # Remove Bearer, so that we just have th token
-        token = header.replace('Bearer', '')
+        token = header.replace('Bearer ', '')
 
         try:
             payload = jwt.decode(
@@ -40,5 +40,4 @@ class JWTAuthentication(BasicAuthentication):
             print(error)
             raise PermissionDenied(detail="User Does not Exist")
 
-        # authenticate() specifies we need to return a tuple of user and auth
         return (user, token)
