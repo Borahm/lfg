@@ -17,15 +17,15 @@ class Project(models.Model):
         "jwt_auth.User",
         related_name="member_projects",
     )
+    posts = models.ManyToManyField(
+        "posts.Post",
+        related_name="projects",
+    )
     title = models.CharField(default=None, max_length=100)
     tldr = models.CharField(default=None, max_length=140)
     description = models.TextField(default=None, max_length=1000)
     status = models.CharField(
         default=None, max_length=100, choices=PROJECT_STATUS)
-    posts = models.ManyToManyField(
-        "posts.Post",
-        related_name="projects",
-    )
     hero_image = models.CharField(default=None, max_length=500)
     project_images = models.CharField(default=None, max_length=2000)
     # posts: Foreign key
