@@ -5,7 +5,7 @@ from rest_framework import status
 from django.db import IntegrityError
 
 from .models import Project
-from .serializers.common import ProjectSerializer
+from .serializers.common import ProjectSerializer, CommentSerializer
 from .serializers.populated import PopulatedProjectSerializer
 
 from rest_framework.exceptions import NotFound
@@ -30,7 +30,7 @@ class ProjectListView(APIView):
         serialized_data = ProjectSerializer(
             data=request.data)  # Get the data from the request and store in serialized_data
         try:
-            serialized_data.is_valid  # validate
+            serialized_data.is_valid()  # validate
             serialized_data.save()  # save to database if valid
             print('serialized_data.data ------>', serialized_data.data)
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
@@ -54,7 +54,7 @@ class ProjectDetailView(APIView):
 
     def get(self, _request, pk):
         project = self.get_project(pk=pk)
-        serialized_project = PopulatedProjectSerializer(project)
+        serialized_project = ProjectSerializer(project)
         return Response(serialized_project.data, status=status.HTTP_200_OK)
 
     def delete(self, _request, pk):
@@ -72,3 +72,36 @@ class ProjectDetailView(APIView):
             return Response(serialized_project.data, status=status.HTTP_202_ACCEPTED)
         except:
             return Response("Unprcessable entity", status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+
+class CommentListView(APIView):
+    # This specifies the permissions classes a view should use - tuple with trailing comma
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get(self, _request):
+        projects = Project.objects.all()
+        serialized_projects = PopulatedProjectSerializer(
+            projects, many=True)
+        print('Projects ------->', projects)
+        print('serialized_projects ------->', serialized_projects)
+        return Response(serialized_projects.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        request.data["owner"] = request.user.id
+        print('request data --->', request.data)
+        project = request.data['project']
+        print('project---->', project)
+        serialized_data = CommentSerializer(data=request.data)
+        print(serialized_data)
+        print("Oh hello")
+        try:
+
+            serialized_data.is_valid()  # validate
+            serialized_data.save()  # save to database if valid
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        except IntegrityError as e:
+            return Response({"detail": str(e)}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        except AssertionError as e:
+            return Response({"detail": str(e)}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        except:
+            return Response("Unprocessable entity", status=status.HTTP_422_UNPROCESSABLE_ENTITY)

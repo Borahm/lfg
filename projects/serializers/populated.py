@@ -5,5 +5,5 @@ from posts.serializers.populated import PopulatedPostSerializer
 
 class PopulatedProjectSerializer(ProjectSerializer):
     owner = UserSerializer()
-    members = UserSerializer(many=True)
-    posts = PopulatedPostSerializer(many=True)
+    # members = UserSerializer(many=True)
+    # posts = PopulatedPostSerializer(many=True)

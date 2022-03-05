@@ -11,6 +11,13 @@ User = get_user_model()
 # Serializers
 
 
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "email", "first_name", "last_name",
+                  "profile_image")
+
+
 class UserSerializer(serializers.ModelSerializer):
     # never converted into JSON and returned in response
     # so allows us to write to the db when posting, but won't return when being converted back

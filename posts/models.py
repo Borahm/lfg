@@ -14,3 +14,16 @@ class Post(models.Model):
         related_name="owner_posts",
         on_delete=models.CASCADE
     )
+
+
+# class PostContributor(models.Model):
+#     post = models.ForeignKey(
+#         Post,
+#         related_name="project_posts",
+#         on_delete=models.CASCADE
+#     )
+#     project = models.ForeignKey(
+#         "projects.Project",
+#         related_name="project_posts",
+#         on_delete=models.CASCADE
+#     )

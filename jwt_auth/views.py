@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
-from .serializers.common import UserSerializer
+from .serializers.common import UserSerializer, UserUpdateSerializer
 from datetime import datetime, timedelta
 import jwt
 from django.conf import settings
@@ -77,3 +77,15 @@ class UserDetailView(APIView):
         user = self.get_user(pk=pk)
         serialized_user = UserSerializer(user)
         return Response(serialized_user.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
+        user_to_update = self.get_user(pk=pk)
+        serialized_user = UserUpdateSerializer(
+            user_to_update, data=request.data)
+
+        try:
+            serialized_user.is_valid()
+            serialized_user.save()
+            return Response(serialized_user.data, status=status.HTTP_202_ACCEPTED)
+        except:
+            return Response("Unprocessable entity", status=status.HTTP_422_UNPROCESSABLE_ENTITY)
