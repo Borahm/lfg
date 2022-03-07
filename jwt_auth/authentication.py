@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.conf import settings  # imports settings that also includes secret key
 import jwt  # import jwt
 
+
 # User model
 User = get_user_model()
 

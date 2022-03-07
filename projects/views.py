@@ -1,12 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.http import Http404
+
 
 from django.db import IntegrityError
 
 from .models import Project
-from .serializers.common import ProjectSerializer, CommentSerializer
-from .serializers.populated import PopulatedProjectSerializer
+from .serializers.common import ProjectSerializer, PostSerializer
+from .serializers.populated import PopulatedProjectSerializer, PopulatedPostSerializer
 
 from rest_framework.exceptions import NotFound
 
@@ -27,12 +29,18 @@ class ProjectListView(APIView):
         return Response(serialized_projects.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        request.data["owner"] = request.user.id
+        request.data["members"] = [request.user.id]
+        # print('request data owner --->', request.data)
         serialized_data = ProjectSerializer(
-            data=request.data)  # Get the data from the request and store in serialized_data
+            data=request.data, )  # Get the data from the request and store in serialized_data
+        print('request user --->', request.user.id)
+        print('request_auth---->', request.auth)
+        print('serializez members---->', serialized_data)
         try:
             serialized_data.is_valid()  # validate
-            serialized_data.save()  # save to database if valid
-            print('serialized_data.data ------>', serialized_data.data)
+            # save to database if valid
+            serialized_data.save()
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except IntegrityError as e:
             return Response({"detail": str(e)}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
@@ -54,7 +62,7 @@ class ProjectDetailView(APIView):
 
     def get(self, _request, pk):
         project = self.get_project(pk=pk)
-        serialized_project = ProjectSerializer(project)
+        serialized_project = PopulatedProjectSerializer(project)
         return Response(serialized_project.data, status=status.HTTP_200_OK)
 
     def delete(self, _request, pk):
@@ -67,6 +75,8 @@ class ProjectDetailView(APIView):
         serialized_project = ProjectSerializer(
             project_to_update, data=request.data)
         try:
+            if project_to_update.owner.id != request.user.id:
+                raise Http404("You don't own this object")
             serialized_project.is_valid()
             serialized_project.save()
             return Response(serialized_project.data, status=status.HTTP_202_ACCEPTED)
@@ -74,7 +84,7 @@ class ProjectDetailView(APIView):
             return Response("Unprcessable entity", status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
-class CommentListView(APIView):
+class PostListView(APIView):
     # This specifies the permissions classes a view should use - tuple with trailing comma
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
@@ -88,16 +98,17 @@ class CommentListView(APIView):
 
     def post(self, request):
         request.data["owner"] = request.user.id
-        print('request data --->', request.data)
-        project = request.data['project']
-        print('project---->', project)
-        serialized_data = CommentSerializer(data=request.data)
+        # print('request data --->', request.data)
+        # project = request.data['project']
+        # print('project---->', project)
+        serialized_data = PostSerializer(data=request.data)
         print(serialized_data)
         print("Oh hello")
         try:
 
             serialized_data.is_valid()  # validate
-            serialized_data.save()  # save to database if valid
+            # save to database if valid
+            serialized_data.save()
             return Response(serialized_data.data, status=status.HTTP_201_CREATED)
         except IntegrityError as e:
             return Response({"detail": str(e)}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)

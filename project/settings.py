@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'jwt_auth',
     'projects',
-    'posts',
     'join_requests',
 ]
 

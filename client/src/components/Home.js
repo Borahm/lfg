@@ -9,7 +9,7 @@ const Home = () => {
 
 
   useEffect(() => {
-    const getProjects = async () => {
+    const getAllProjects = async () => {
       try {
         const { data } = await axios.get('/api/projects/')
         setProjects(data)
@@ -18,7 +18,7 @@ const Home = () => {
         setHasError({ error: true, message: err.message })
       }
     }
-    getProjects()
+    getAllProjects()
   }, [])
 
   return (
@@ -26,16 +26,20 @@ const Home = () => {
       {projects.length &&
 
         <Container>
-          {projects.map(project => {
-            const { id, title, hero_image, description, status, tldr, owner } = project
-            return (
-              <Flex key={id}>
-                <Heading>{title}</Heading>
-                <Text>{description}</Text>
-              </Flex>
-            )
-
-          })}
+          <Flex flexDirection='column'>
+            {projects.map(project => {
+              const { id, title, hero_image, status, tldr, owner } = project
+              return (
+                <Flex name='event-box' key={id} flexDirection="column">
+                  <Heading>{title}</Heading>
+                  <Image src={hero_image} alt='hero image' />
+                  <Image src={owner.profile_iamge} alt='owner' />
+                  <Text>{owner.first_name} {owner.last_name}</Text>
+                  <Text>{tldr}</Text>
+                </Flex>
+              )
+            })}
+          </Flex>
         </Container>
       }
 

@@ -13,12 +13,7 @@
     "email": "bo@bo.com",
     "first_name": "Borahm",
     "last_name": "Cho",
-    "profile_image": "image.png",
-    "course_location": "London",
-    "course_number": "61",
-    "groups": [],
-    "user_permissions": [],
-    "projects": []
+    "user_permissions": []
   }
 },
 {
@@ -35,34 +30,7 @@
     "email": "lisa@lisa.com",
     "first_name": "Lisa",
     "last_name": "Müller",
-    "profile_image": "image.png",
-    "course_location": "London",
-    "course_number": "61",
-    "groups": [],
-    "user_permissions": [],
-    "projects": []
-  }
-},
-{
-  "model": "jwt_auth.user",
-  "pk": 3,
-  "fields": {
-    "password": "pass",
-    "last_login": null,
-    "is_superuser": false,
-    "username": "Martin",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2022-03-03T20:06:14Z",
-    "email": "martin@martin.com",
-    "first_name": "Martin",
-    "last_name": "Martin",
-    "profile_image": "image.png",
-    "course_location": "Remote",
-    "course_number": "59",
-    "groups": [],
-    "user_permissions": [],
-    "projects": []
+    "user_permissions": []
   }
 }
 ]

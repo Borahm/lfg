@@ -22,10 +22,22 @@ class RegisterView(APIView):
 
     def post(self, request):
         user_to_create = UserSerializer(data=request.data)
+        print('user to create---->', user_to_create)
         try:
             user_to_create.is_valid()
             user_to_create.save()
-            return Response(user_to_create.data, status=status.HTTP_201_CREATED)
+            user_to_login = User.objects.get(email=request.data.get('email'))
+            dt = datetime.now() + timedelta(days=7)
+            token = jwt.encode({
+                'sub': user_to_login.id,
+                'exp': int(dt.strftime('%s'))
+            }, settings.SECRET_KEY, 'HS256')
+            print('TOKEN ----->', token)
+            return Response({
+                'token': token,
+                'message': f"Welcome {user_to_login.first_name}"
+            }, status=status.HTTP_201_CREATED)
+
         except:
             return Response("Failed to create user", status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
@@ -39,12 +51,14 @@ class LoginView(APIView):
         except User.DoesNotExist:
             return PermissionDenied(detail="Unauthorised")
 
+        # If we reach this code, the user was found - so we need to now validate the password
         if not user_to_login.check_password(request.data.get('password')):
             return PermissionDenied(detail="Unauthorised")
 
+        # Then if the password is validated we can create the token and return it
         dt = datetime.now() + timedelta(days=7)  # today + 7 days for the expiry
         # strftime with %s converts to a date string of seconds, which we then convert to an int
-        print('DT ----->', int(dt.strftime('%s')))
+        # print('DT ----->', int(dt.strftime('%s')))
 
         # create the token
         # first arg is the payload - we'll add our id as a sub and the dt variable above as the expiry
