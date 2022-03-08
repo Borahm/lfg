@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'jwt_auth',
     'projects',
     'join_requests',
+    'posts',
+    'members',
 ]
 
 MIDDLEWARE = [

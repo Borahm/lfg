@@ -1,16 +1,15 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.http import Http404
 
 
 from django.db import IntegrityError
 
 from .models import Project
-from .serializers.common import ProjectSerializer, PostSerializer
-from .serializers.populated import PopulatedProjectSerializer, PopulatedPostSerializer
+from .serializers.common import ProjectSerializer
+from .serializers.populated import PopulatedProjectSerializer
 
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 
 # Permissions classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -76,43 +75,9 @@ class ProjectDetailView(APIView):
             project_to_update, data=request.data)
         try:
             if project_to_update.owner.id != request.user.id:
-                raise Http404("You don't own this object")
+                raise PermissionDenied(detail="Unauthorised")
             serialized_project.is_valid()
             serialized_project.save()
             return Response(serialized_project.data, status=status.HTTP_202_ACCEPTED)
         except:
             return Response("Unprcessable entity", status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-
-class PostListView(APIView):
-    # This specifies the permissions classes a view should use - tuple with trailing comma
-    permission_classes = (IsAuthenticatedOrReadOnly,)
-
-    def get(self, _request):
-        projects = Project.objects.all()
-        serialized_projects = PopulatedProjectSerializer(
-            projects, many=True)
-        print('Projects ------->', projects)
-        print('serialized_projects ------->', serialized_projects)
-        return Response(serialized_projects.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        request.data["owner"] = request.user.id
-        # print('request data --->', request.data)
-        # project = request.data['project']
-        # print('project---->', project)
-        serialized_data = PostSerializer(data=request.data)
-        print(serialized_data)
-        print("Oh hello")
-        try:
-
-            serialized_data.is_valid()  # validate
-            # save to database if valid
-            serialized_data.save()
-            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
-        except IntegrityError as e:
-            return Response({"detail": str(e)}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        except AssertionError as e:
-            return Response({"detail": str(e)}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        except:
-            return Response("Unprocessable entity", status=status.HTTP_422_UNPROCESSABLE_ENTITY)

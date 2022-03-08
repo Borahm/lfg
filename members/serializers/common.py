@@ -2,19 +2,19 @@
 from rest_framework import serializers
 from jwt_auth.serializers.common import UserSerializer
 # import Project model its now up a level so we write ..models.models
-from ..models import Request
+from ..models import Member
 
 
-class RequestSerializer(serializers.ModelSerializer):
+class MemberSerializer(serializers.ModelSerializer):
 
     owner = UserSerializer()
 
     class Meta:
-        model = Request
+        model = Member
         fields = '__all__'
 
 
-class SendRequestSerializer(serializers.ModelSerializer):
+class SendMemberSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Request
+        model = Member
         fields = '__all__'

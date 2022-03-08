@@ -7,12 +7,14 @@ import { getTokenFromLocalStorage, userIsAuthenticated } from './helper/auth'
 
 const Project = () => {
 
-  const [profile, setProfile] = useState({})
   const [project, setProject] = useState({})
   const [hasError, setHasError] = useState({ error: false, message: '' })
   const { projectId } = useParams()
   const [request, setRequest] = useState({
     text: '',
+    project: projectId,
+  })
+  const [members, setMembers] = useState({
     project: projectId,
   })
 
@@ -41,7 +43,7 @@ const Project = () => {
     e.preventDefault()
     console.log('requests ---->', request)
     try {
-      await axios.post('/api/requests/', request,
+      await axios.post(`/api/requests/`, request,
         {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
@@ -50,22 +52,50 @@ const Project = () => {
     } catch (err) {
       setHasError({ error: true, message: err.message })
     }
+  }
 
+  const handleAccept = async (e) => {
+    e.preventDefault()
+    console.log('requests ---->', request)
+    console.log('project members --->', project.members)
+    console.log('e target owner', e.target.name)
+    console.log('project members --->', project.members)
+    try {
+      await axios.delete(`/api/requests/${e.target.value}`,
+        {
+          headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          },
+        })
+    } catch (err) {
+      setHasError({ error: true, message: err.message })
+    }
+    try {
+      await axios.post('/api/members/', members,
+        {
+          headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          },
+        })
+    } catch (err) {
+      setHasError({ error: true, message: err.message })
+    }
   }
 
   return (
-    <Container>
+    < Container >
+
       {project && project.owner &&
         <Flex name="header" flexDirection='column' mt='5'>
           <Heading>Title: {project.title}</Heading>
           <Text>TLR: {project.tldr}</Text>
           <Text>Owner: {project.owner.first_name} {project.owner.last_name}</Text>
-          Members: {project.members &&
-            project.members.map(member => {
-              const { id, first_name, last_name } = member
+          Members: {project.project_members &&
+            project.project_members.map(member => {
+              const { id, owner } = member
               return (
                 <Flex name='member-box' key={id}>
-                  <Text>{first_name} {last_name}</Text>
+                  <Text>{owner.first_name} {owner.last_name}</Text>
                 </Flex>
               )
             })
@@ -77,9 +107,9 @@ const Project = () => {
       }
       <Flex name="posts">
         <Heading>Posts</Heading>
-        {project.written_posts &&
+        {project.project_posts &&
           <Flex flexDirection='column'>
-            {project.written_posts.map(post => {
+            {project.project_posts.map(post => {
               const { id, text, owner } = post
               return (
                 <Flex name='event-box' key={id} flexDirection="column">
@@ -103,6 +133,7 @@ const Project = () => {
                   <Image src={owner.profile_image} alt='owner' />
                   <Text>{owner.first_name} {owner.last_name}</Text>
                   <Text>{text}</Text>
+                  <Button onClick={handleAccept} value={id} name={owner.id}>Accept</Button>
                 </Flex>
               )
             })}
@@ -117,7 +148,7 @@ const Project = () => {
             <FormLabel htmlFor='text'>Text</FormLabel>
             <Textarea onChange={handleChange} type="text" name="text" placeholder='text' defaultValue={request.text} />
           </FormControl>
-          <Button onClick={handleSubmit}>Send request</Button>
+          <Button type="submit">Send request</Button>
         </form>
       </Flex>
     </Container >

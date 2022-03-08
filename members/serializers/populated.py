@@ -1,8 +1,8 @@
+from .common import MemberSerializer
 from projects.serializers.common import ProjectSerializer
-from .common import RequestSerializer
 from jwt_auth.serializers.common import UserSerializer
 
 
-class PopulatedRequestSerializer(RequestSerializer):
+class PopulatedMemberSerializer(MemberSerializer):
     owner = UserSerializer()
     project = ProjectSerializer()
