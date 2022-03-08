@@ -29,12 +29,13 @@ class ProjectListView(APIView):
 
     def post(self, request):
         request.data["owner"] = request.user.id
-        request.data["members"] = [request.user.id]
+        request.data["project_members"] = request.user.id
+        print('request user --->', request.user.id)
+        print('request_auth---->', request.auth)
         # print('request data owner --->', request.data)
         serialized_data = ProjectSerializer(
             data=request.data, )  # Get the data from the request and store in serialized_data
-        print('request user --->', request.user.id)
-        print('request_auth---->', request.auth)
+
         print('serializez members---->', serialized_data)
         try:
             serialized_data.is_valid()  # validate

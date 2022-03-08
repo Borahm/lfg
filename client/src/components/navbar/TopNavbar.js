@@ -90,9 +90,9 @@ const MenuLinks = ({ isOpen }) => {
         pt={[4, 4, 0, 0]}
         alignItems='center'
       >
+        <MenuItem to='/create'>Create new project</MenuItem>
         {userIsAuthenticated() ?
           <Box name='subnav' w="100" display='flex' justifyContent='space-between'>
-            <MenuItem mr='10' onClick={gotToUserProfile}>Profile </MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Box>
           :

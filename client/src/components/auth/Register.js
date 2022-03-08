@@ -5,6 +5,7 @@ import {
   Heading,
   FormControl,
   FormLabel,
+  Image,
   Input,
   Button,
   Alert,
@@ -14,8 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Select } from '@chakra-ui/react'
-
-// import { ImageUpload } from '../helper/ImageUpload'
+import { ImageUpload } from '../helper/ImageUpload'
 
 const Register = () => {
 
@@ -30,6 +30,8 @@ const Register = () => {
     course_number: '',
     password: '',
     password_confirmation: '',
+    profile_picture: '',
+
   })
 
   const [formError, setFormError] = useState({
@@ -41,6 +43,8 @@ const Register = () => {
     course_number: '',
     password: '',
     password_confirmation: '',
+    profile_picture: '',
+
   })
   const handleChange = (e) => {
     const newObj = { ...formData, [e.target.name]: e.target.valueAsNumber || e.target.value } //Spreading formData makes sure we maintain the data structure of formData
@@ -52,7 +56,7 @@ const Register = () => {
   const [alert, setAlert] = useState(false)
 
   // Saves the token from handleSubmit in the localStorage
-  // const [imageUploading, setImageUploading] = useState(false)
+  const [imageUploading, setImageUploading] = useState(false)
 
 
   const setTokenToLocalStorage = (token) => {
@@ -63,10 +67,10 @@ const Register = () => {
     // if (formData.password && formData.password_confirmation && formData.password !== formData.password_confirmation)
     //   setFormError({ ...formError, password_confirmation: 'passwords don\'t match' })
     e.preventDefault()
-    if (formData) {
+    if (formData.profile_picture) {
       try {
         console.log(formData)
-        const { data } = await axios.post('api/auth/register/', formData) //Posting the data from the form
+        const { data } = await axios.post('/api/auth/register/', formData) //Posting the data from the form
         console.log('token -->', data.token)
         setTokenToLocalStorage(data.token) // pass on the token to the localStorage
         navigate('/')
@@ -81,9 +85,9 @@ const Register = () => {
     }, 2000)
   }
 
-  // const handleImageUrl = url => {
-  //   setFormData({ ...formData, profilePicture: url })
-  // }
+  const handleImageUrl = url => {
+    setFormData({ ...formData, profile_picture: url })
+  }
 
   return (
     <><Flex width="full" align="center" justifyContent="center" mt='10'>
@@ -147,18 +151,18 @@ const Register = () => {
                 <Input onChange={handleChange} type="password" name="password_confirmation" placeholder='Password Confirmation' defaultValue={formData.password_confirmation} />
                 {formError.password_confirmation && <Alert status='error' mt={4}>{formError.password_confirmation}</Alert>}
               </FormControl>
-              {/*<FormControl isRequired mt={6}>
+              <FormControl isRequired mt={6}>
                 <FormLabel htmlFor='picture'>Add Profile Picture</FormLabel>
-               
+
                 <ImageUpload
-                  value={formData.profilePicture}
+                  value={formData.profile_picture}
                   name='picture'
                   handleImageUrl={handleImageUrl}
                   setImageUploading={setImageUploading} />
-              
-              </FormControl> * /}
+
+              </FormControl>
               {/* Error + Button */}
-              {/*{!imageUploading ?
+              {!imageUploading ?
                 <Button type="submit" colorScheme='blue' width="full" mt={4}>Register</Button>
                 :
                 <Spinner mt='4' />
@@ -169,8 +173,7 @@ const Register = () => {
                   Please upload a profile photo
                 </Alert>
 
-              }*/}
-              <Button type="submit" colorScheme='blue' width="full" mt={4}>Register</Button>
+              }
             </form>
           </Box>
         </>

@@ -11,6 +11,7 @@ class User(AbstractUser):  # Extending the default Django User Model
     # profile_image = models.CharField(max_length=300)
     course_location = models.CharField(max_length=20)
     course_number = models.IntegerField()
+    profile_picture = models.CharField(max_length=300)
     projects = models.ManyToManyField(
         "projects.Project",
         related_name="user_projects",

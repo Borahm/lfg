@@ -6,6 +6,7 @@ import TopNavbar from './components/navbar/TopNavbar'
 import Register from './components/auth/Register'
 import Login from './components/auth/Login'
 import Project from './components/Project'
+import Create from './components/Create'
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/projects/:projectId" element={<Project />} />
+        <Route path="/create" element={<Create />} />
       </Routes>
     </BrowserRouter>
   )

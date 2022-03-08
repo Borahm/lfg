@@ -4,25 +4,71 @@
   "pk": 1,
   "fields": {
     "owner": 1,
-    "title": "Group travel planning app",
-    "tldr": "Make it easier to plan trips with a group",
-    "description": "Everyone knows how hard it is to plan trips with friends. It will collect feedback, remind people to fill out things and collect money from everyone",
+    "title": "Lets build a custom wordle game for anything",
+    "tldr": "Like Wordle, except you enter a 5 or 6 letter word and get a shareable link so others can try to guess your word.",
+    "description": "Use this for a lesson warmup or brain break, with the teacher choosing a word relevant to the lesson. It's also makes for a handy lock when creating digital breakout games.",
     "status": "IDEATING",
-    "hero_image": "image.png",
-    "project_images": "image.png"
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646763048/lfg/wordle_tbrhnm.webp"
   }
 },
 {
   "model": "projects.project",
   "pk": 2,
   "fields": {
-    "owner": 2,
-    "title": "Find a wedding venue",
-    "tldr": "Everyone knows how hard it is to find a wedding venue",
-    "description": "We are making it a lot easier for everyone to find venues that you love",
-    "status": "BUILDING",
-    "hero_image": "image.png",
-    "project_images": "image.png"
+    "owner": 1,
+    "title": "Make a To-Do List App Like Google Tasks or Todoist",
+    "tldr": "Long gone are the times where a post-it note was the only way to remind yourself of some upcoming task or event.",
+    "description": "To-do apps can be attributed to the general group of productivity software. The first versions of productivity tools appeared in the 1980s when home computers were introduced and all the paperwork could be digitalized.  productivity app, also called a to-do list app, is an app, whether mobile or web, that allows users to organize and manage their to-do lists day to day. This kind of app can be used on laptops, smartphones, PCs, tablets, and other wearable devices.",
+    "status": "EXPLORING",
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765285/lfg/to-do-list-apps_kgt2lr.png"
+  }
+},
+{
+  "model": "projects.project",
+  "pk": 3,
+  "fields": {
+    "owner": 1,
+    "title": "Code Space Invaders for Mobile",
+    "tldr": "In React native that works on all devices",
+    "description": "Space Invaders[b] is a 1978 shoot 'em up arcade game developed by Tomohiro Nishikado. It was manufactured and sold by Taito in Japan, and licensed to the Midway division of Bally for overseas distribution. Space Invaders was the first fixed shooter and set the template for the shoot 'em up genre. The goal is to defeat wave after wave of descending aliens with a horizontally moving laser to earn as many points as possible.",
+    "status": "EXPLORING",
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765490/lfg/cover-1591955301711_yply4j.avif"
+  }
+},
+{
+  "model": "projects.project",
+  "pk": 4,
+  "fields": {
+    "owner": 1,
+    "title": "Create a custom online store",
+    "tldr": "The most advanced and customized online store",
+    "description": "For centuries, success in commerce was defined by a simple formula. Secure a profitable spot for your cart. Shout louder than your competitor to attract more foot traffic. Operate at a lower cost to pocket more profits. In the 21st century, it’s not that simple. Large, vocal brands often fail to connect with modern consumers. The physical location can be more of a nuisance than a convenience. And a small store can be operated with a lean budget and no inventory at all.",
+    "status": "IDEATING",
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765728/lfg/download_ii08cn.jpg"
+  }
+},
+{
+  "model": "projects.project",
+  "pk": 5,
+  "fields": {
+    "owner": 1,
+    "title": "Tracking your expenses",
+    "tldr": "Know how much you spend",
+    "description": "Tracking your spending is often the first step in getting your finances in order. By understanding what you spend money on and how much you spend, you can see exactly where your cash is going and areas where you can cut back.",
+    "status": "IDEATING",
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765978/lfg/images_hkdlac.jpg"
+  }
+},
+{
+  "model": "projects.project",
+  "pk": 6,
+  "fields": {
+    "owner": 1,
+    "title": "Mealplanning sucks",
+    "tldr": "Don't plan, just eat",
+    "description": "Meal planning is asking the what’s for dinner question once for the whole week, instead of every night, and then shopping for and prepping the ingredients before cooking. We believe the simplest way to approach meal planning is with three steps.",
+    "status": "IDEATING",
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646766305/lfg/istockphoto-980276548-612x612_sr6ezg.jpg"
   }
 }
 ]

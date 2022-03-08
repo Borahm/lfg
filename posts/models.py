@@ -4,6 +4,8 @@ from django.db import models
 class Post(models.Model):
     text = models.TextField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True)
+    post_picture = models.CharField(max_length=300, default=None, blank=True,)
+
     project = models.ForeignKey(
         'projects.Project',
         related_name="project_posts",

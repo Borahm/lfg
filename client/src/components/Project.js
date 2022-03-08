@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import { Container, Heading, Flex, Box, FormControl, FormLabel, Button, Text, Textarea, Image, VStack } from '@chakra-ui/react'
-import { getTokenFromLocalStorage, userIsAuthenticated } from './helper/auth'
+import { Container, Heading, Avatar, Flex, Box, FormControl, FormLabel, Button, Text, Textarea, Image, VStack } from '@chakra-ui/react'
+import { getTokenFromLocalStorage, userIsAuthenticated, userIsAuthenticatedProjectOwner, userIsAuthenticatedAndMember } from './helper/auth'
 
 
 const Project = () => {
@@ -12,43 +12,62 @@ const Project = () => {
   const { projectId } = useParams()
   const [request, setRequest] = useState({
     text: '',
-    project: projectId,
+    project: '',
+  })
+  const [post, setPost] = useState({
+    text: '',
+    project: '',
+    post_picture: '',
   })
   const [members, setMembers] = useState({
-    project: projectId,
+    project: '',
   })
+  const [action, setAction] = useState(null)
 
   const [formError, setFormError] = useState('') // We expect only a string now
-
-  const handleChange = (e) => {
-    const newObj = { ...request, [e.target.name]: e.target.value } //Spreading request makes sure we maintain the data structure of request
-    setRequest(newObj)
-    setFormError('')
-  }
 
   useEffect(() => {
     const getSingleProject = async () => {
       try {
         const { data } = await axios.get(`/api/projects/${projectId}`,)
         setProject(data)
-        console.log(data)
+        console.log('data ---->', data)
       } catch (err) {
         setHasError({ error: true, message: err.message })
       }
     }
     getSingleProject()
-  }, [])
+  }, [request, members, projectId, action,])
 
-  const handleSubmit = async (e) => {
+  const handleRequestSubmit = async (e) => {
     e.preventDefault()
-    console.log('requests ---->', request)
+    console.log('requests ---->', { ...request, project: parseInt(projectId) })
     try {
-      await axios.post(`/api/requests/`, request,
+      await axios.post(`/api/requests/`, { ...request, project: parseInt(projectId) },
         {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
+      setRequest({ text: '' })
+      // handleChange('')
+    } catch (err) {
+      setHasError({ error: true, message: err.message })
+    }
+  }
+
+  const handlePostSubmit = async (e) => {
+    e.preventDefault()
+    console.log('post---->', { ...post, project: parseInt(projectId) })
+    try {
+      await axios.post(`/api/posts/`, { ...post, project: parseInt(projectId) },
+        {
+          headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          },
+        })
+      setPost({ text: '' })
+      // handleChange('')
     } catch (err) {
       setHasError({ error: true, message: err.message })
     }
@@ -56,31 +75,41 @@ const Project = () => {
 
   const handleAccept = async (e) => {
     e.preventDefault()
-    console.log('requests ---->', request)
-    console.log('project members --->', project.members)
-    console.log('e target owner', e.target.name)
-    console.log('project members --->', project.members)
+
     try {
+
+      await axios.post('/api/members/', { project: projectId },
+        {
+          headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          },
+        })
+      setRequest({ text: '' })
       await axios.delete(`/api/requests/${e.target.value}`,
         {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
-    } catch (err) {
-      setHasError({ error: true, message: err.message })
-    }
-    try {
-      await axios.post('/api/members/', members,
-        {
-          headers: {
-            Authorization: `Bearer ${getTokenFromLocalStorage()}`,
-          },
-        })
+      setRequest({ text: '' })
+
     } catch (err) {
       setHasError({ error: true, message: err.message })
     }
   }
+
+  const handleRequestChange = (e) => {
+    const newObj = { ...request, [e.target.name]: e.target.value } //Spreading request makes sure we maintain the data structure of request
+    setRequest(newObj)
+    setFormError('')
+  }
+
+  const handlePostChange = (e) => {
+    const newObj = { ...post, [e.target.name]: e.target.value } //Spreading request makes sure we maintain the data structure of request
+    setPost(newObj)
+    setFormError('')
+  }
+
 
   return (
     < Container >
@@ -88,7 +117,9 @@ const Project = () => {
       {project && project.owner &&
         <Flex name="header" flexDirection='column' mt='5'>
           <Heading>Title: {project.title}</Heading>
-          <Text>TLR: {project.tldr}</Text>
+          <Text>STATUS: {project.status}</Text>
+          <Text>TDLR: {project.tldr}</Text>
+          <Avatar size='md' src={project.owner.profile_image} />
           <Text>Owner: {project.owner.first_name} {project.owner.last_name}</Text>
           Members: {project.project_members &&
             project.project_members.map(member => {
@@ -101,8 +132,7 @@ const Project = () => {
             })
           }
           <Text>Description: {project.description}</Text>
-          <Text>Hero Image:{project.hero_image}</Text>
-          <Text>Project Images:{project.project_images}</Text>
+          <Image src={project.project_image} />
         </Flex>
       }
       <Flex name="posts">
@@ -110,47 +140,64 @@ const Project = () => {
         {project.project_posts &&
           <Flex flexDirection='column'>
             {project.project_posts.map(post => {
-              const { id, text, owner } = post
+              const { id, text, owner, post_picture } = post
               return (
                 <Flex name='event-box' key={id} flexDirection="column">
                   <Text>{owner.first_name} {owner.last_name}</Text>
                   <Text>{text}</Text>
+                  <Image src={post_picture} />
                 </Flex>
               )
             })}
           </Flex>
         }
       </Flex>
+      {userIsAuthenticatedProjectOwner(project) && project.owner &&
+        < Flex name="requests">
+          <Heading>Requests</Heading>
+          {project.project_requests &&
+            <Flex flexDirection='column'>
+              {project.project_requests.map(post => {
+                const { id, text, owner } = post
+                return (
+                  <Flex name='event-box' key={id} flexDirection="column">
+                    <Image src={owner.profile_image} alt='owner' />
+                    <Text>{owner.first_name} {owner.last_name}</Text>
+                    <Text>{text}</Text>
+                    <Button onClick={handleAccept} value={id} name={owner.id}>Accept</Button>
+                  </Flex>
+                )
+              })}
+            </Flex>
+          }
+        </Flex>
+      }
+      {userIsAuthenticatedAndMember(project) && project.project_members &&
+        < Flex name="post_form">
 
-      <Flex name="requests">
-        <Heading>Requests</Heading>
-        {project.project_requests &&
-          <Flex flexDirection='column'>
-            {project.project_requests.map(post => {
-              const { id, text, owner } = post
-              return (
-                <Flex name='event-box' key={id} flexDirection="column">
-                  <Image src={owner.profile_image} alt='owner' />
-                  <Text>{owner.first_name} {owner.last_name}</Text>
-                  <Text>{text}</Text>
-                  <Button onClick={handleAccept} value={id} name={owner.id}>Accept</Button>
-                </Flex>
-              )
-            })}
-          </Flex>
-        }
-      </Flex>
 
+          <Heading>Write Post</Heading>
+
+          <form onSubmit={handlePostSubmit}>
+            <FormControl isRequired>
+              <FormLabel htmlFor='text'>Text</FormLabel>
+              <Textarea onChange={handlePostChange} type="text" name="text" placeholder='text' value={post.text} />
+            </FormControl>
+            <Button type="submit">Write post</Button>
+          </form>
+        </Flex>
+      }
       <Flex name="request_form">
         <Heading>Send Request</Heading>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleRequestSubmit}>
           <FormControl isRequired>
             <FormLabel htmlFor='text'>Text</FormLabel>
-            <Textarea onChange={handleChange} type="text" name="text" placeholder='text' defaultValue={request.text} />
+            <Textarea onChange={handleRequestChange} type="text" name="text" placeholder='text' value={request.text} />
           </FormControl>
           <Button type="submit">Send request</Button>
         </form>
       </Flex>
+
     </Container >
   )
 

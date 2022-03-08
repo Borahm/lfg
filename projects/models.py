@@ -19,8 +19,7 @@ class Project(models.Model):
     description = models.TextField(default=None, max_length=1000)
     status = models.CharField(
         default=None, max_length=100, choices=PROJECT_STATUS)
-    hero_image = models.CharField(default=None, max_length=500)
-    project_images = models.CharField(default=None, max_length=2000)
+    project_image = models.CharField(default=None, max_length=500)
 
     def __str__(self):
         return f"{self.title}"
