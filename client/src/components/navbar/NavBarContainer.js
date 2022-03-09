@@ -11,7 +11,7 @@ const NavBarContainer = ({ children, ...props }) => {
       justify="space-between"
       wrap="wrap"
       w="100%"
-      h="60px"
+      h="80px"
       py='4'
       px='10'
       borderWidth='1px'

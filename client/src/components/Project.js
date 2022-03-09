@@ -13,7 +13,7 @@ import {
   ModalCloseButton,
   useDisclosure
 } from '@chakra-ui/react'
-import { getTokenFromLocalStorage, userIsAuthenticated, userIsAuthenticatedProjectOwner, userIsAuthenticatedAndMember } from './helper/auth'
+import { getTokenFromLocalStorage, userIsAuthenticated, userIsAuthenticatedProjectOwner } from './helper/auth'
 import { ImageUpload } from '../components/helper/ImageUpload'
 
 
@@ -64,13 +64,14 @@ const Project = () => {
     e.preventDefault()
     console.log('requests ---->', { ...request, project: parseInt(projectId) })
     try {
-      await axios.post(`/api/requests/`, { ...request, project: parseInt(projectId) },
+      const { data } = await axios.post(`/api/requests/`, { ...request, project: parseInt(projectId) },
         {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
-      setRequest({ text: '' })
+      console.log('data ----->', data)
+      setRequest(data)
       // handleChange('')
     } catch (err) {
       setHasError({ error: true, message: err.message })
@@ -81,7 +82,7 @@ const Project = () => {
     e.preventDefault()
     console.log('post---->', { ...post, project: parseInt(projectId) })
     try {
-      await axios.post(`/api/posts/`, { ...post, project: parseInt(projectId) },
+      const { data } = await axios.post(`/api/posts/`, { ...post, project: parseInt(projectId) },
         {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
@@ -96,17 +97,17 @@ const Project = () => {
 
   const handleAccept = async (e) => {
     e.preventDefault()
-
+    console.log('etarget name--->', e.target.name, 'etarget value -->', e.target.value, 'etarget request -->', e.target.attributes.getNamedItem('requestId').value)
     try {
 
-      await axios.post('/api/members/', { project: projectId },
+      await axios.post('/api/members/', { project: projectId, owner: e.target.value },
         {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
       setRequest({ text: '' })
-      await axios.delete(`/api/requests/${e.target.value}`,
+      await axios.delete(`/api/requests/${e.target.attributes.getNamedItem('requestId').value}`,
         {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
@@ -202,7 +203,7 @@ const Project = () => {
                     }
                   </AvatarGroup>
                 </Box>
-                {!(userIsAuthenticatedAndMember(project) && project.project_members) &&
+                {project.project_members &&
                   <Button onClick={onOpen} px='8' colorScheme='purple'>Join the project</Button>
                 }
               </Box>
@@ -210,7 +211,7 @@ const Project = () => {
 
           </Box>
 
-          {userIsAuthenticatedProjectOwner(project) && project.owner && project.project_requests > 0 &&
+          {userIsAuthenticatedProjectOwner(project) && project.owner && project.project_requests &&
             <Flex name="requests" mt='4' flexDirection='column'>
               <Heading size='md' mb='4'>Requests</Heading>
               {project.project_requests &&
@@ -227,7 +228,7 @@ const Project = () => {
                           </Flex>
                         </Flex>
                         <Box>
-                          <Button onClick={handleAccept} value={id} name={owner.id}>Accept</Button>
+                          <Button onClick={handleAccept} value={owner.id} name='owner' requestId={id}>Accept</Button>
                         </Box>
                       </Flex>
                     )
@@ -243,7 +244,7 @@ const Project = () => {
       }
 
       {
-        userIsAuthenticatedAndMember(project) && project.project_members &&
+        project.project_members &&
         <Flex name="post_form" width='100%'>
           <Flex name="project_posts" mt='4' flexDirection='column' width='100%'>
             <Heading size='md' mb='4'>Project updates</Heading>
@@ -275,28 +276,32 @@ const Project = () => {
               </form>
             </Flex>
             <Heading size='md' mb='4' mt='8'>Last posts</Heading>
-            {project.project_posts &&
-              <Flex mt='4' flexDirection='column'>
-                {project.project_posts.sort(function (a, b) {
-                  return new Date(b.created_at) - new Date(a.created_at)
-                }).map(post => {
-                  const { id, text, owner, post_picture } = post
-                  return (
-                    <Flex p='4' mb='4' name='post-box' width='100%' key={id} alignItems='center' backgroundColor='gray.100' borderWidth='1px' borderRadius='8'>
-                      <Flex>
-                        <Flex alignItems='flex-start'>
-                          <Avatar size='sm' src={owner.profile_picture} alt='owner' />
-                        </Flex>
-                        <Flex ml='4' flexDirection='column'>
-                          <Text pt='1' fontSize='14px' fontweight='bold' >{owner.first_name} {owner.last_name}</Text>
-                          <Text my='4'>{text}</Text>
-                          <Image src={post_picture}></Image>
+            {project.project_posts ?
+              <>
+                <Flex mt='4' flexDirection='column'>
+                  {project.project_posts.sort(function (a, b) {
+                    return new Date(b.created_at) - new Date(a.created_at)
+                  }).map(post => {
+                    const { id, text, owner, post_picture } = post
+                    return (
+                      <Flex p='4' mb='4' name='post-box' width='100%' key={id} alignItems='center' backgroundColor='gray.100' borderWidth='1px' borderRadius='8'>
+                        <Flex>
+                          <Flex alignItems='flex-start'>
+                            <Avatar size='sm' src={owner.profile_picture} alt='owner' />
+                          </Flex>
+                          <Flex ml='4' flexDirection='column'>
+                            <Text pt='1' fontSize='14px' fontweight='bold' >{owner.first_name} {owner.last_name}</Text>
+                            <Text my='4'>{text}</Text>
+                            <Image src={post_picture}></Image>
+                          </Flex>
                         </Flex>
                       </Flex>
-                    </Flex>
-                  )
-                })}
-              </Flex>
+                    )
+                  })}
+                </Flex>
+              </>
+              :
+              <Spinner mt='4' />
             }
           </Flex>
 
@@ -312,7 +317,7 @@ const Project = () => {
         left='0'
         bgGradient='linear(to-b, transparent, white)'
 
-        height='800px'>
+        height='850px'>
 
       </Box>
 

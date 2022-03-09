@@ -34,14 +34,15 @@ export const userIsAuthenticatedProjectOwner = (project) => {
   return currentTime < payload.exp
 }
 
-export const userIsAuthenticatedAndMember = (project) => {
-  const payload = getPayload()
-  if (project.project_members && payload) {
-    console.log('find member', project.project_members.some(member => member == payload.sub))
-    if (payload.sub != project.owner.id) return
-  }
-  // 
-  if (!payload) return
-  const currentTime = Math.round(Date.now() / 1000)
-  return currentTime < payload.exp
-}
+// export const userIsAuthenticatedAndMember = (project) => {
+//   const payload = getPayload()
+//   if (project.project_members && payload) {
+//     project.project_members.some(member => member.owner.id == payload.sub)
+//     elif(payload.sub != project.owner.id)
+//     return True
+//   }
+//   // 
+//   if (!payload) return
+//   const currentTime = Math.round(Date.now() / 1000)
+//   return currentTime < payload.exp
+// }

@@ -28,10 +28,13 @@ class ProjectListView(APIView):
         return Response(serialized_projects.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        print('request data ------>', request.data)
+        print('request user --->', request.user)
         request.data["owner"] = request.user.id
         request.data["project_members"] = request.user.id
-        print('request user --->', request.user.id)
+        print('request user id --->', request.user.id)
         print('request_auth---->', request.auth)
+        print('updated request dat', request.data)
         # print('request data owner --->', request.data)
         serialized_data = ProjectSerializer(
             data=request.data, )  # Get the data from the request and store in serialized_data

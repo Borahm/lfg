@@ -39,6 +39,7 @@ const Create = () => {
     description: '',
     status: '',
     project_image: '',
+
   })
   const handleChange = (e) => {
     const newObj = { ...formData, [e.target.name]: e.target.valueAsNumber || e.target.value } //Spreading formData makes sure we maintain the data structure of formData
@@ -59,6 +60,7 @@ const Create = () => {
               Authorization: `Bearer ${getTokenFromLocalStorage()}`,
             },
           })
+        setFormData(data)
         console.log('data -->', data)
         navigate(`/`)
       } catch (err) {
