@@ -4,14 +4,17 @@ import axios from 'axios'
 import {
   AvatarGroup, Container, Heading, Avatar, Flex, Box, Badge, FormControl, FormLabel, Input, Button, Text, Textarea, Image, VStack, Modal,
   ModalOverlay,
+  Spinner,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
+  AlertIcon,
+  Alert,
   ModalCloseButton,
   useDisclosure
 } from '@chakra-ui/react'
 import { getTokenFromLocalStorage, userIsAuthenticated, userIsAuthenticatedProjectOwner, userIsAuthenticatedAndMember } from './helper/auth'
+import { ImageUpload } from '../components/helper/ImageUpload'
 
 
 const Project = () => {
@@ -19,6 +22,8 @@ const Project = () => {
 
   const initialRef = React.useRef()
   const finalRef = React.useRef()
+  const [alert, setAlert] = useState(false)
+
 
   const [project, setProject] = useState({})
   const [hasError, setHasError] = useState({ error: false, message: '' })
@@ -37,6 +42,9 @@ const Project = () => {
   })
   const [action, setAction] = useState(null)
 
+  const [imageUploading, setImageUploading] = useState(false)
+
+
   const [formError, setFormError] = useState('') // We expect only a string now
 
   useEffect(() => {
@@ -50,7 +58,7 @@ const Project = () => {
       }
     }
     getSingleProject()
-  }, [request, members, projectId, action,])
+  }, [request, post, members, projectId, action,])
 
   const handleRequestSubmit = async (e) => {
     e.preventDefault()
@@ -123,8 +131,13 @@ const Project = () => {
     setFormError('')
   }
 
+  const handleImageUrl = url => {
+    setPost({ ...post, post_picture: url })
+  }
+
+
   return (
-    <Container width="60%" minWidth='60%' backgroundColor="white" borderRadius='8' mt='20' boxShadow='xl' p='10'>
+    <Container width="60%" minWidth='60%' backgroundColor="white" borderRadius='8' borderWidth='1px' mt='20' boxShadow='xl' p='10'>
 
       {project && project.owner &&
         <Flex name="header" flexDirection='column'>
@@ -145,7 +158,7 @@ const Project = () => {
                       <Textarea width="380px" onChange={handleRequestChange} type="text" name="text" placeholder='Text' value={request.text} />
                     </FormControl>
                     <Box mt='5'>
-                      <Button mr='3' type="submit" colorScheme='purple' onClick={onClose}>Send request</Button>
+                      <Button mr='3' type="submit" colorcheme='purple' onClick={onClose}>Send request</Button>
                       <Button onClick={onClose}>Cancel</Button>
                     </Box>
                   </form>
@@ -154,9 +167,9 @@ const Project = () => {
 
             </ModalContent>
           </Modal>
-          <Box>
+          <Box name='header'>
 
-            <Flex p='8' name='project-box' mb='2' borderWidth='1px' borderRadius='8'>
+            <Flex p='8' name='project-box' mb='4' borderWidth='1px' borderRadius='8'>
               <Box display='flex' alignItems='center'>
                 <Image src={project.project_image} ratio={1} alt='project image' borderRadius='8' />
               </Box>
@@ -169,11 +182,13 @@ const Project = () => {
               </Box>
             </Flex>
 
-            <Box name='request-box' px='8' py='6' mb='6' justifyContent='center' display='flex' colorScheme='purple' backgroundColor='gray.200' borderRadius='8'>
+            <Box name='request-box' px='8' py='6' mb='4' justifyContent='center' display='flex' colorScheme='purple' backgroundColor='gray.200' borderRadius='8'>
+
               <Box name='join-today' display='flex' alignItems='center'>
                 <Heading size='md'>Let's build today</Heading>
-                <Box name='members' display='flex' mx='6'  >
-                  <AvatarGroup>
+
+                <Box name='members' display='flex' mx='6'>
+                  <AvatarGroup display='flex' flexWrap='wrap'>
                     {project.project_members &&
                       project.project_members.map(member => {
                         const { id, owner } = member
@@ -186,73 +201,106 @@ const Project = () => {
                       })
                     }
                   </AvatarGroup>
-
                 </Box>
-                <Button onClick={onOpen} px='8' colorScheme='purple'>Join the project</Button>
+                {!(userIsAuthenticatedAndMember(project) && project.project_members) &&
+                  <Button onClick={onOpen} px='8' colorScheme='purple'>Join the project</Button>
+                }
               </Box>
             </Box>
 
           </Box>
 
-
-          <Heading size='md' mb='4'>Description</Heading>
-          <Text>{project.description}</Text>
-        </Flex >
-      }
-      <Flex name="posts" flexDirection='column'>
-        <Heading size='md' mb='4'>Description</Heading>
-
-        {project.project_posts &&
-          <Flex flexDirection='column'>
-            {project.project_posts.map(post => {
-              const { id, text, owner, post_picture } = post
-              return (
-                <Flex name='event-box' key={id} flexDirection="column">
-                  <Text>{owner.first_name} {owner.last_name}</Text>
-                  <Text>{text}</Text>
-                  <Image src={post_picture} />
+          {userIsAuthenticatedProjectOwner(project) && project.owner && project.project_requests > 0 &&
+            <Flex name="requests" mt='4' flexDirection='column'>
+              <Heading size='md' mb='4'>Requests</Heading>
+              {project.project_requests &&
+                <Flex flexWrap='wrap'>
+                  {project.project_requests.map(post => {
+                    const { id, text, owner } = post
+                    return (
+                      <Flex p='4' mb='4' name='event-box' justifyContent='space-between' width='100%' key={id} alignItems='center' backgroundColor='gray.200' borderRadius='8'>
+                        <Flex alignItems='center'>
+                          <Avatar size='sm' src={owner.profile_picture} alt='owner' />
+                          <Flex ml='4' flexDirection='column'>
+                            <Text fontSize='12px' fontweight='bold' >{owner.first_name} {owner.last_name}</Text>
+                            <Text>"{text}"</Text>
+                          </Flex>
+                        </Flex>
+                        <Box>
+                          <Button onClick={handleAccept} value={id} name={owner.id}>Accept</Button>
+                        </Box>
+                      </Flex>
+                    )
+                  })}
                 </Flex>
-              )
-            })}
-          </Flex>
-        }
-      </Flex>
-      {
-        userIsAuthenticatedProjectOwner(project) && project.owner &&
-        <Flex name="requests" flexDirection='column'>
-          <Heading size='md' mb='4'>Description</Heading>
-
-          {project.project_requests &&
-            <Flex flexDirection='column'>
-              {project.project_requests.map(post => {
-                const { id, text, owner } = post
-                return (
-                  <Flex name='event-box' key={id} flexDirection="column">
-                    <Avatar src={owner.profile_picture} alt='owner' />
-                    <Text>{owner.first_name} {owner.last_name}</Text>
-                    <Text>{text}</Text>
-                    <Button onClick={handleAccept} value={id} name={owner.id}>Accept</Button>
-                  </Flex>
-                )
-              })}
+              }
             </Flex>
           }
+
+          <Heading size='md' my='4'>Description</Heading>
+          <Text>{project.description}</Text>
         </Flex>
       }
+
       {
         userIsAuthenticatedAndMember(project) && project.project_members &&
-        < Flex name="post_form">
+        <Flex name="post_form" width='100%'>
+          <Flex name="project_posts" mt='4' flexDirection='column' width='100%'>
+            <Heading size='md' mb='4'>Project updates</Heading>
+            <Flex name='post-box' width='100%' flexDirection='column'>
+              <form onSubmit={handlePostSubmit}>
+                <FormControl isRequired>
+                  <Textarea onChange={handlePostChange} type="text" name="text" placeholder='text' value={post.text} />
+                </FormControl>
+                <FormControl isRequired mt={6}>
+                  <FormLabel htmlFor='post_picture'>Add Project Image</FormLabel>
+                  <ImageUpload
+                    value={post.post_picture}
+                    name='post_picture'
+                    handleImageUrl={handleImageUrl}
+                    setImageUploading={setImageUploading} />
+                </FormControl>
+                {/* Error + Button */}
+                {!imageUploading ?
+                  <Button type="submit" colorScheme='blue' width="full" mt={4}>Post</Button>
+                  :
+                  <Spinner mt='4' />
+                }
+                {alert &&
+                  <Alert status='error'>
+                    <AlertIcon />
+                    Please upload a picture
+                  </Alert>
+                }
+              </form>
+            </Flex>
+            <Heading size='md' mb='4' mt='8'>Last posts</Heading>
+            {project.project_posts &&
+              <Flex mt='4' flexDirection='column'>
+                {project.project_posts.sort(function (a, b) {
+                  return new Date(b.created_at) - new Date(a.created_at)
+                }).map(post => {
+                  const { id, text, owner, post_picture } = post
+                  return (
+                    <Flex p='4' mb='4' name='post-box' width='100%' key={id} alignItems='center' backgroundColor='gray.100' borderWidth='1px' borderRadius='8'>
+                      <Flex>
+                        <Flex alignItems='flex-start'>
+                          <Avatar size='sm' src={owner.profile_picture} alt='owner' />
+                        </Flex>
+                        <Flex ml='4' flexDirection='column'>
+                          <Text pt='1' fontSize='14px' fontweight='bold' >{owner.first_name} {owner.last_name}</Text>
+                          <Text my='4'>{text}</Text>
+                          <Image src={post_picture}></Image>
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  )
+                })}
+              </Flex>
+            }
+          </Flex>
 
 
-          <Heading>Write Post</Heading>
-
-          <form onSubmit={handlePostSubmit}>
-            <FormControl isRequired>
-              <FormLabel htmlFor='text'>Text</FormLabel>
-              <Textarea onChange={handlePostChange} type="text" name="text" placeholder='text' value={post.text} />
-            </FormControl>
-            <Button type="submit">Write post</Button>
-          </form>
         </Flex>
       }
       <Box
