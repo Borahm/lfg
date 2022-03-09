@@ -20,6 +20,11 @@ class Project(models.Model):
     status = models.CharField(
         default=None, max_length=100, choices=PROJECT_STATUS)
     project_image = models.CharField(default=None, max_length=500)
+    members = models.ManyToManyField(
+        "members.Member",
+        related_name="projects",
+        default=None
+    )
 
     def __str__(self):
         return f"{self.title}"

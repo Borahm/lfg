@@ -137,7 +137,7 @@ const Project = () => {
 
 
   return (
-    <Container width="60%" minWidth='60%' backgroundColor="white" borderRadius='8' borderWidth='1px' mt='20' boxShadow='xl' p='10'>
+    <Container width="60%" minWidth='60%' backgroundColor="white" borderRadius='8' borderWidth='1px' mt='20' mb='20' boxShadow='xl' p='10'>
 
       {project && project.owner &&
         <Flex name="header" flexDirection='column'>
