@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import { Container, Heading, Avatar, Flex, Box, FormControl, FormLabel, Button, Text, Textarea, Image, VStack } from '@chakra-ui/react'
+import {
+  AvatarGroup, Container, Heading, Avatar, Flex, Box, Badge, FormControl, FormLabel, Input, Button, Text, Textarea, Image, VStack, Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure
+} from '@chakra-ui/react'
 import { getTokenFromLocalStorage, userIsAuthenticated, userIsAuthenticatedProjectOwner, userIsAuthenticatedAndMember } from './helper/auth'
 
 
 const Project = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const initialRef = React.useRef()
+  const finalRef = React.useRef()
 
   const [project, setProject] = useState({})
   const [hasError, setHasError] = useState({ error: false, message: '' })
@@ -110,33 +123,85 @@ const Project = () => {
     setFormError('')
   }
 
-
   return (
-    < Container >
+    <Container width="60%" minWidth='60%' backgroundColor="white" borderRadius='8' mt='20' boxShadow='xl' p='10'>
 
       {project && project.owner &&
-        <Flex name="header" flexDirection='column' mt='5'>
-          <Heading>Title: {project.title}</Heading>
-          <Text>STATUS: {project.status}</Text>
-          <Text>TDLR: {project.tldr}</Text>
-          <Avatar size='md' src={project.owner.profile_image} />
-          <Text>Owner: {project.owner.first_name} {project.owner.last_name}</Text>
-          Members: {project.project_members &&
-            project.project_members.map(member => {
-              const { id, owner } = member
-              return (
-                <Flex name='member-box' key={id}>
-                  <Text>{owner.first_name} {owner.last_name}</Text>
+        <Flex name="header" flexDirection='column'>
+          <Modal
+            initialFocusRef={initialRef}
+            isOpen={isOpen}
+            onClose={onClose}
+          >
+            <ModalOverlay />
+            <ModalContent p='2'>
+              <ModalHeader>Send a request to join the group</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody pb={6}>
+                <Flex name="request_form">
+                  <form onSubmit={handleRequestSubmit}>
+                    <FormControl isRequired>
+                      <FormLabel htmlFor='text'>Tell us more about you</FormLabel>
+                      <Textarea width="380px" onChange={handleRequestChange} type="text" name="text" placeholder='Text' value={request.text} />
+                    </FormControl>
+                    <Box mt='5'>
+                      <Button mr='3' type="submit" colorScheme='purple' onClick={onClose}>Send request</Button>
+                      <Button onClick={onClose}>Cancel</Button>
+                    </Box>
+                  </form>
                 </Flex>
-              )
-            })
-          }
-          <Text>Description: {project.description}</Text>
-          <Image src={project.project_image} />
-        </Flex>
+              </ModalBody>
+
+            </ModalContent>
+          </Modal>
+          <Box>
+
+            <Flex p='8' name='project-box' mb='2' borderWidth='1px' borderRadius='8'>
+              <Box display='flex' alignItems='center'>
+                <Image src={project.project_image} ratio={1} alt='project image' borderRadius='8' />
+              </Box>
+              <Box name='box-content' ml='6' display='flex' flexDirection='column' justifyContent='center' >
+                <Heading name='eventName' color='primary' size='lg'>{project.title}</Heading>
+                <Box>
+                  <Badge mt='3' colorScheme='purple'>{project.status}</Badge>
+                </Box>
+                <Text mt='4'>{project.tldr}</Text>
+              </Box>
+            </Flex>
+
+            <Box name='request-box' px='8' py='6' mb='6' justifyContent='center' display='flex' colorScheme='purple' backgroundColor='gray.200' borderRadius='8'>
+              <Box name='join-today' display='flex' alignItems='center'>
+                <Heading size='md'>Let's build today</Heading>
+                <Box name='members' display='flex' mx='6'  >
+                  <AvatarGroup>
+                    {project.project_members &&
+                      project.project_members.map(member => {
+                        const { id, owner } = member
+                        return (
+                          <Flex name='member-box' key={id}>
+                            <Avatar showBorder='true' size='md' src={owner.profile_picture} />
+                          </Flex>
+
+                        )
+                      })
+                    }
+                  </AvatarGroup>
+
+                </Box>
+                <Button onClick={onOpen} px='8' colorScheme='purple'>Join the project</Button>
+              </Box>
+            </Box>
+
+          </Box>
+
+
+          <Heading size='md' mb='4'>Description</Heading>
+          <Text>{project.description}</Text>
+        </Flex >
       }
-      <Flex name="posts">
-        <Heading>Posts</Heading>
+      <Flex name="posts" flexDirection='column'>
+        <Heading size='md' mb='4'>Description</Heading>
+
         {project.project_posts &&
           <Flex flexDirection='column'>
             {project.project_posts.map(post => {
@@ -152,16 +217,18 @@ const Project = () => {
           </Flex>
         }
       </Flex>
-      {userIsAuthenticatedProjectOwner(project) && project.owner &&
-        < Flex name="requests">
-          <Heading>Requests</Heading>
+      {
+        userIsAuthenticatedProjectOwner(project) && project.owner &&
+        <Flex name="requests" flexDirection='column'>
+          <Heading size='md' mb='4'>Description</Heading>
+
           {project.project_requests &&
             <Flex flexDirection='column'>
               {project.project_requests.map(post => {
                 const { id, text, owner } = post
                 return (
                   <Flex name='event-box' key={id} flexDirection="column">
-                    <Image src={owner.profile_image} alt='owner' />
+                    <Avatar src={owner.profile_picture} alt='owner' />
                     <Text>{owner.first_name} {owner.last_name}</Text>
                     <Text>{text}</Text>
                     <Button onClick={handleAccept} value={id} name={owner.id}>Accept</Button>
@@ -172,7 +239,8 @@ const Project = () => {
           }
         </Flex>
       }
-      {userIsAuthenticatedAndMember(project) && project.project_members &&
+      {
+        userIsAuthenticatedAndMember(project) && project.project_members &&
         < Flex name="post_form">
 
 
@@ -187,16 +255,34 @@ const Project = () => {
           </form>
         </Flex>
       }
-      <Flex name="request_form">
-        <Heading>Send Request</Heading>
-        <form onSubmit={handleRequestSubmit}>
-          <FormControl isRequired>
-            <FormLabel htmlFor='text'>Text</FormLabel>
-            <Textarea onChange={handleRequestChange} type="text" name="text" placeholder='text' value={request.text} />
-          </FormControl>
-          <Button type="submit">Send request</Button>
-        </form>
-      </Flex>
+      <Box
+        width='100%'
+        name='gradient'
+        zIndex='-1'
+        position='absolute'
+        top='0'
+        left='0'
+        bgGradient='linear(to-b, transparent, white)'
+
+        height='800px'>
+
+      </Box>
+
+      <Box
+        width='120%'
+        name='gradient'
+        backgroundSize='100%'
+        zIndex='-2'
+        position='absolute'
+        top='-20'
+        left='-20'
+        filter='auto'
+        blur='50px'
+        backgroundImage={project.project_image}
+        backgroundRepeat="no-repeat"
+        height='800px'>
+
+      </Box>
 
     </Container >
   )

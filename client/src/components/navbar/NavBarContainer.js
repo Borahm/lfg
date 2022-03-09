@@ -11,11 +11,11 @@ const NavBarContainer = ({ children, ...props }) => {
       justify="space-between"
       wrap="wrap"
       w="100%"
-      h="20px"
-      mt={3}
-      mb={8}
-
-      bg={["primary.500", "primary.500", "transparent", "transparent"]}
+      h="60px"
+      py='4'
+      px='10'
+      borderWidth='1px'
+      bg='white'
       color={["black", "black", "primary.700", "primary.700"]}
       {...props}
     >

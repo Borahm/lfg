@@ -1,7 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
+
 import { ChakraProvider, extendTheme, Center, Container } from '@chakra-ui/react'
+
 
 export const theme = extendTheme({
   semanticTokens: {
@@ -29,7 +31,7 @@ export const theme = extendTheme({
 ReactDOM.render(
   <ChakraProvider theme={theme}>
     <Center>
-      <Container m='0' maxWidth='container.lg' padding={0} ml='10' mr='10' centerContent>
+      <Container maxWidth='100%' padding={0} mb='0' centerContent>
         <App />
       </Container>
     </Center>

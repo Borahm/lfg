@@ -79,6 +79,7 @@ const MenuLinks = ({ isOpen }) => {
   return (
     <Box
       name="top"
+      fontSize='14px'
       display={{ base: isOpen ? "flex" : "none", md: "block" }}
       flexBasis={{ base: "100%", md: "auto" }}
       justifyContent='flex-end'
@@ -90,7 +91,7 @@ const MenuLinks = ({ isOpen }) => {
         pt={[4, 4, 0, 0]}
         alignItems='center'
       >
-        <MenuItem to='/create'>Create new project</MenuItem>
+        <MenuItem to='/create'>Create project</MenuItem>
         {userIsAuthenticated() ?
           <Box name='subnav' w="100" display='flex' justifyContent='space-between'>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
