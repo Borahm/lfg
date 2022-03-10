@@ -6,15 +6,6 @@ from ..models import Member
 
 
 class MemberSerializer(serializers.ModelSerializer):
-
-    owner = UserSerializer()
-
-    class Meta:
-        model = Member
-        fields = '__all__'
-
-
-class SendMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = '__all__'

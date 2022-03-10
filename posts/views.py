@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Post
-from .serializers.common import PostSerializer, SendPostSerializer
+from .serializers.common import PostSerializer
 from .serializers.populated import PopulatedPostSerializer
 
 from rest_framework.exceptions import NotFound, PermissionDenied
@@ -78,7 +78,7 @@ class PostListView(APIView):
     def post(self, request):
         request.data["owner"] = request.user.id
         print(request.data)
-        serialized_request = SendPostSerializer(data=request.data)
+        serialized_request = PostSerializer(data=request.data)
         print(serialized_request)
         try:
             serialized_request.is_valid()

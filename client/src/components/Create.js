@@ -48,7 +48,6 @@ const Create = () => {
     console.log(formData)
   }
 
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (formData.project_image) {
@@ -60,6 +59,7 @@ const Create = () => {
               Authorization: `Bearer ${getTokenFromLocalStorage()}`,
             },
           })
+
         setFormData(data)
         console.log('data -->', data)
         navigate(`/`)

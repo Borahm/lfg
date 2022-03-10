@@ -5,4 +5,3 @@ from .common import PostSerializer
 
 class PopulatedPostSerializer(PostSerializer):
     owner = UserSerializer()
-    project = ProjectSerializer()

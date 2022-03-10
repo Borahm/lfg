@@ -31,7 +31,6 @@ class ProjectListView(APIView):
         print('request data ------>', request.data)
         print('request user --->', request.user)
         request.data["owner"] = request.user.id
-        request.data["project_members"] = request.user.id
         print('request user id --->', request.user.id)
         print('request_auth---->', request.auth)
         print('updated request dat', request.data)

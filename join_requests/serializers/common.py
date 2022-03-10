@@ -6,15 +6,6 @@ from ..models import Request
 
 
 class RequestSerializer(serializers.ModelSerializer):
-
-    owner = UserSerializer()
-
-    class Meta:
-        model = Request
-        fields = '__all__'
-
-
-class SendRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
         fields = '__all__'

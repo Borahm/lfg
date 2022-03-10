@@ -36,8 +36,10 @@ const Home = () => {
           <>
             <Container name='container' display='flex' flexDirection='column' maxW='container.lg' mt='' p='0'>
               <Flex name='project-container' alignItems='center' flexDirection='column' mt='4' mb='4'>
-                {projects.map(project => {
-                  const { id, title, project_image, status, tldr, owner, project_members } = project
+                {projects.sort(function (a, b) {
+                  return new Date(b.created_at) - new Date(a.created_at)
+                }).map(project => {
+                  const { id, title, project_image, status, tldr, owner, members } = project
                   return (
                     <Link to={`/projects/${project.id}`} key={id}>
                       <Flex name='project-box' w={['400px', '500px', '700px']} height='150px' borderWidth='1px' borderRadius='5' mb='5'>
@@ -47,8 +49,8 @@ const Home = () => {
                           <Badge mt='3' colorScheme='purple'>{status}</Badge>
                           <Box name='members' display='flex'>
                             <AvatarGroup>
-                              {project_members &&
-                                project_members.map(member => {
+                              {members &&
+                                members.map(member => {
                                   const { id, owner } = member
                                   return (
                                     <Flex name='member-box' key={id}>

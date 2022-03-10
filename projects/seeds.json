@@ -8,12 +8,8 @@
     "tldr": "Like Wordle, except you enter a 5 or 6 letter word and get a shareable link so others can try to guess your word.",
     "description": "Use this for a lesson warmup or brain break, with the teacher choosing a word relevant to the lesson. It's also makes for a handy lock when creating digital breakout games.",
     "status": "IDEATING",
-    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646763048/lfg/wordle_tbrhnm.webp",
-    "members": [
-      3,
-      6,
-      7
-    ]
+    "created_at": "2022-03-10T00:31:55.253Z",
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646763048/lfg/wordle_tbrhnm.webp"
   }
 },
 {
@@ -25,8 +21,8 @@
     "tldr": "Long gone are the times where a post-it note was the only way to remind yourself of some upcoming task or event.",
     "description": "To-do apps can be attributed to the general group of productivity software. The first versions of productivity tools appeared in the 1980s when home computers were introduced and all the paperwork could be digitalized.  productivity app, also called a to-do list app, is an app, whether mobile or web, that allows users to organize and manage their to-do lists day to day. This kind of app can be used on laptops, smartphones, PCs, tablets, and other wearable devices.",
     "status": "EXPLORING",
-    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765285/lfg/to-do-list-apps_kgt2lr.png",
-    "members": []
+    "created_at": "2022-03-09T00:31:55.253Z",
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765285/lfg/to-do-list-apps_kgt2lr.png"
   }
 },
 {
@@ -35,11 +31,11 @@
   "fields": {
     "owner": 2,
     "title": "Code Space Invaders for Mobile",
+    "created_at": "2022-03-08T00:31:55.253Z",
     "tldr": "In React native that works on all devices",
     "description": "Space Invaders[b] is a 1978 shoot 'em up arcade game developed by Tomohiro Nishikado. It was manufactured and sold by Taito in Japan, and licensed to the Midway division of Bally for overseas distribution. Space Invaders was the first fixed shooter and set the template for the shoot 'em up genre. The goal is to defeat wave after wave of descending aliens with a horizontally moving laser to earn as many points as possible.",
     "status": "EXPLORING",
-    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765490/lfg/cover-1591955301711_yply4j.avif",
-    "members": []
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765490/lfg/cover-1591955301711_yply4j.avif"
   }
 },
 {
@@ -48,13 +44,11 @@
   "fields": {
     "owner": 4,
     "title": "Create a custom online store",
+    "created_at": "2022-03-03T00:31:55.253Z",
     "tldr": "The most advanced and customized online store",
     "description": "For centuries, success in commerce was defined by a simple formula. Secure a profitable spot for your cart. Shout louder than your competitor to attract more foot traffic. Operate at a lower cost to pocket more profits. In the 21st century, it’s not that simple. Large, vocal brands often fail to connect with modern consumers. The physical location can be more of a nuisance than a convenience. And a small store can be operated with a lean budget and no inventory at all.",
     "status": "IDEATING",
-    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765728/lfg/download_ii08cn.jpg",
-    "members": [
-      5
-    ]
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765728/lfg/download_ii08cn.jpg"
   }
 },
 {
@@ -63,14 +57,11 @@
   "fields": {
     "owner": 8,
     "title": "Tracking your expenses",
+    "created_at": "2022-03-04T00:31:55.253Z",
     "tldr": "Know how much you spend",
     "description": "Tracking your spending is often the first step in getting your finances in order. By understanding what you spend money on and how much you spend, you can see exactly where your cash is going and areas where you can cut back.",
     "status": "IDEATING",
-    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765978/lfg/images_hkdlac.jpg",
-    "members": [
-      3,
-      4
-    ]
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646765978/lfg/images_hkdlac.jpg"
   }
 },
 {
@@ -79,14 +70,11 @@
   "fields": {
     "owner": 10,
     "title": "Mealplanning sucks",
+    "created_at": "2022-03-05T00:31:55.253Z",
     "tldr": "Don't plan, just eat",
     "description": "Meal planning is asking the what’s for dinner question once for the whole week, instead of every night, and then shopping for and prepping the ingredients before cooking. We believe the simplest way to approach meal planning is with three steps.",
     "status": "IDEATING",
-    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646766305/lfg/istockphoto-980276548-612x612_sr6ezg.jpg",
-    "members": [
-      1,
-      2
-    ]
+    "project_image": "https://res.cloudinary.com/dxd82e0ky/image/upload/v1646766305/lfg/istockphoto-980276548-612x612_sr6ezg.jpg"
   }
 }
 ]

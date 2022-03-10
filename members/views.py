@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Member
-from .serializers.common import MemberSerializer, SendMemberSerializer
+from .serializers.common import MemberSerializer
 from .serializers.populated import PopulatedMemberSerializer
 
 from rest_framework.exceptions import NotFound, PermissionDenied
@@ -76,10 +76,13 @@ class MemberListView(APIView):
         return Response(serialized_request.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        print('request --->', request.data)
-        # request.data["owner"] = request.user.id
-        print('request data - - ->', request.data)
-        serialized_request = SendMemberSerializer(data=request.data)
+        print('request data ------>', request.data)
+        if not 'owner' in request.data.keys():
+            request.data["owner"] = request.user.id
+        print('request user id --->', request.user.id)
+        print('request_auth---->', request.auth)
+        print('updated request dat', request.data)
+        serialized_request = MemberSerializer(data=request.data)
         print(serialized_request)
         try:
             serialized_request.is_valid()

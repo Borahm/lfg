@@ -5,4 +5,3 @@ from jwt_auth.serializers.common import UserSerializer
 
 class PopulatedRequestSerializer(RequestSerializer):
     owner = UserSerializer()
-    project = ProjectSerializer()

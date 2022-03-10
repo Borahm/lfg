@@ -14,17 +14,13 @@ class Project(models.Model):
         on_delete=models.CASCADE,
         default=None
     )
+    created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(default=None, max_length=100)
     tldr = models.CharField(default=None, max_length=140)
     description = models.TextField(default=None, max_length=1000)
     status = models.CharField(
         default=None, max_length=100, choices=PROJECT_STATUS)
     project_image = models.CharField(default=None, max_length=500)
-    members = models.ManyToManyField(
-        "members.Member",
-        related_name="projects",
-        default=None
-    )
 
     def __str__(self):
         return f"{self.title}"

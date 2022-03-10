@@ -190,8 +190,8 @@ const Project = () => {
 
                 <Box name='members' display='flex' mx='6'>
                   <AvatarGroup display='flex' flexWrap='wrap'>
-                    {project.project_members &&
-                      project.project_members.map(member => {
+                    {project.members &&
+                      project.members.map(member => {
                         const { id, owner } = member
                         return (
                           <Flex name='member-box' key={id}>
@@ -203,7 +203,7 @@ const Project = () => {
                     }
                   </AvatarGroup>
                 </Box>
-                {project.project_members &&
+                {project.members &&
                   <Button onClick={onOpen} px='8' colorScheme='purple'>Join the project</Button>
                 }
               </Box>
@@ -211,12 +211,12 @@ const Project = () => {
 
           </Box>
 
-          {userIsAuthenticatedProjectOwner(project) && project.owner && project.project_requests &&
+          {userIsAuthenticatedProjectOwner(project) && project.owner && project.requests &&
             <Flex name="requests" mt='4' flexDirection='column'>
               <Heading size='md' mb='4'>Requests</Heading>
-              {project.project_requests &&
+              {project.requests &&
                 <Flex flexWrap='wrap'>
-                  {project.project_requests.map(post => {
+                  {project.requests.map(post => {
                     const { id, text, owner } = post
                     return (
                       <Flex p='4' mb='4' name='event-box' justifyContent='space-between' width='100%' key={id} alignItems='center' backgroundColor='gray.200' borderRadius='8'>
@@ -244,9 +244,9 @@ const Project = () => {
       }
 
       {
-        project.project_members &&
+        project.members &&
         <Flex name="post_form" width='100%'>
-          <Flex name="project_posts" mt='4' flexDirection='column' width='100%'>
+          <Flex name="posts" mt='4' flexDirection='column' width='100%'>
             <Heading size='md' mb='4'>Project updates</Heading>
             <Flex name='post-box' width='100%' flexDirection='column'>
               <form onSubmit={handlePostSubmit}>
@@ -276,10 +276,10 @@ const Project = () => {
               </form>
             </Flex>
             <Heading size='md' mb='4' mt='8'>Last posts</Heading>
-            {project.project_posts ?
+            {project.posts ?
               <>
                 <Flex mt='4' flexDirection='column'>
-                  {project.project_posts.sort(function (a, b) {
+                  {project.posts.sort(function (a, b) {
                     return new Date(b.created_at) - new Date(a.created_at)
                   }).map(post => {
                     const { id, text, owner, post_picture } = post

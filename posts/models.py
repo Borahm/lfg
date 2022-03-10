@@ -8,15 +8,14 @@ class Post(models.Model):
 
     project = models.ForeignKey(
         'projects.Project',
-        related_name="project_posts",
-        related_query_name="project_posts",
+        related_name="posts",
         on_delete=models.CASCADE,
         default=None,
         blank=True,
     )
     owner = models.ForeignKey(
         "jwt_auth.User",
-        related_name="owner_posts",
+        related_name="posts",
         on_delete=models.CASCADE,
         default=None,
         blank=True,
