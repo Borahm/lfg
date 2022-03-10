@@ -69,3 +69,21 @@ export const userIsAuthenticatedOwnerOrMember = (project) => {
   }
 }
 
+export const projectEmpty = (project) => {
+  if (project.posts) {
+    if (!project.posts.length) {
+      console.log('is empty')
+      return false
+    } else return true
+  }
+}
+
+export const requestEmpty = (project) => {
+  if (project.requests) {
+    if (!project.posts.length) {
+      console.log('is empty')
+      return false
+    } else return true
+  }
+}
+
