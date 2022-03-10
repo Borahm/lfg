@@ -11,6 +11,8 @@ from datetime import datetime, timedelta
 import jwt
 from django.conf import settings
 
+from .models import User
+
 from rest_framework.exceptions import NotFound
 
 
@@ -81,14 +83,28 @@ class UserDetailView(APIView):
 
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    def get_user(self, pk):
+    # def get_user(self, pk):
+    #     try:
+    #         return User.objects.get(pk=pk)
+    #     except User.DoesNotExist:
+    #         raise NotFound(detail="User not found")
+
+    # def get(self, _request, pk):
+    #     user = self.get_user(pk=pk)
+    #     serialized_user = UserSerializer(user)
+    #     return Response(serialized_user.data, status=status.HTTP_200_OK)
+
+    def get_user(self, email):
         try:
-            return User.objects.get(pk=pk)
+            return User.objects.get(email=email)
         except User.DoesNotExist:
             raise NotFound(detail="User not found")
 
-    def get(self, _request, pk):
-        user = self.get_user(pk=pk)
+    def get(self, request):
+        print('request user-========>', request.user.email)
+        email = request.user.email
+        user = self.get_user(email)
+        print('user ------>', user)
         serialized_user = UserSerializer(user)
         return Response(serialized_user.data, status=status.HTTP_200_OK)
 

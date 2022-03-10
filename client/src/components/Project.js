@@ -24,7 +24,7 @@ const Project = () => {
   const finalRef = React.useRef()
   const [alert, setAlert] = useState(false)
 
-
+  const [user, setUserData] = useState({})
   const [project, setProject] = useState({})
   const [hasError, setHasError] = useState({ error: false, message: '' })
   const { projectId } = useParams()
@@ -52,13 +52,35 @@ const Project = () => {
       try {
         const { data } = await axios.get(`/api/projects/${projectId}`,)
         setProject(data)
-        console.log('data ---->', data)
+        console.log('project data ---->', data)
       } catch (err) {
         setHasError({ error: true, message: err.message })
       }
     }
     getSingleProject()
-  }, [request, post, members, projectId, action,])
+  }, [request, post, members, projectId, action])
+
+
+  useEffect(() => {
+    const getSingleUser = async () => {
+      try {
+        const res = await axios.get(`/api/auth/`,
+          {
+            headers: {
+              Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+            },
+          }
+        )
+        setUserData(res.data)
+      } catch (err) {
+        setHasError({ error: true, message: err.message })
+      }
+    }
+    getSingleUser()
+    // joinProject()
+  }, [])
+
+
 
   const handleRequestSubmit = async (e) => {
     e.preventDefault()
@@ -94,6 +116,23 @@ const Project = () => {
       setHasError({ error: true, message: err.message })
     }
   }
+
+  // const joinProject = async (e) => {
+  //   if (user.id == project.owner.id) {
+  //     try {
+
+  //       await axios.post('/api/members/', { project: projectId, owner: user.id },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+  //           },
+  //         })
+
+  //     } catch (err) {
+  //       setHasError({ error: true, message: err.message })
+  //     }
+  //   }
+  // }
 
   const handleAccept = async (e) => {
     e.preventDefault()
