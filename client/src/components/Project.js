@@ -11,14 +11,24 @@ import {
   AlertIcon,
   Alert,
   ModalCloseButton,
-  useDisclosure
+  useDisclosure,
+  useToast
 } from '@chakra-ui/react'
-import { getTokenFromLocalStorage, userIsAuthenticated, userIsAuthenticatedProjectOwner, userIsAuthenticatedOwnerOrMember } from './helper/auth'
+import { getTokenFromLocalStorage, userIsAuthenticated, userIsAuthenticatedProjectOwner, userIsAuthenticatedOwnerOrMember, userSentRequest } from './helper/auth'
 import { ImageUpload } from '../components/helper/ImageUpload'
 
 
 const Project = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast()
+  const positions = [
+    'top',
+    'top-right',
+    'top-left',
+    'bottom',
+    'bottom-right',
+    'bottom-left',
+  ]
 
   const initialRef = React.useRef()
   const finalRef = React.useRef()
@@ -41,6 +51,7 @@ const Project = () => {
     project: '',
   })
   const [action, setAction] = useState(null)
+  const statuses = ['success', 'error', 'warning', 'info']
 
   const [imageUploading, setImageUploading] = useState(false)
 
@@ -80,6 +91,17 @@ const Project = () => {
     // joinProject()
   }, [])
 
+  const toastExample = (e) => {
+    toast({
+      title: 'Success!',
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+      status: 'info',
+      position: 'top',
+      colorScheme: 'purple'
+    })
+  }
 
 
   const handleRequestSubmit = async (e) => {
@@ -94,6 +116,7 @@ const Project = () => {
         })
       console.log('data ----->', data)
       setRequest(data)
+      toastExample()
       // handleChange('')
     } catch (err) {
       setHasError({ error: true, message: err.message })
@@ -110,29 +133,13 @@ const Project = () => {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
+      toastExample()
       setPost({ text: '' })
       // handleChange('')
     } catch (err) {
       setHasError({ error: true, message: err.message })
     }
   }
-
-  // const joinProject = async (e) => {
-  //   if (user.id == project.owner.id) {
-  //     try {
-
-  //       await axios.post('/api/members/', { project: projectId, owner: user.id },
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
-  //           },
-  //         })
-
-  //     } catch (err) {
-  //       setHasError({ error: true, message: err.message })
-  //     }
-  //   }
-  // }
 
   const handleAccept = async (e) => {
     e.preventDefault()
@@ -153,7 +160,7 @@ const Project = () => {
           },
         })
       setRequest({ text: '' })
-
+      toastExample()
     } catch (err) {
       setHasError({ error: true, message: err.message })
     }
@@ -199,14 +206,14 @@ const Project = () => {
                     <ModalHeader>Send a request to join the group</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
-                      <Flex name="request_form">
+                      <Flex toastTitle='Request submited' toastDescription='`You should hear back soon from ${project.owner.first_name}`' name="request_form">
                         <form onSubmit={handleRequestSubmit}>
                           <FormControl isRequired>
                             <FormLabel htmlFor='text'>Tell us more about you</FormLabel>
                             <Textarea width="380px" onChange={handleRequestChange} type="text" name="text" placeholder='Text' value={request.text} />
                           </FormControl>
                           <Box mt='5'>
-                            <Button mr='3' type="submit" colorcheme='purple' onClick={onClose}>Send request</Button>
+                            <Button mr='3' type="submit" colorScheme='purple' backgrooun onClick={onClose} >Send request</Button>
                             <Button onClick={onClose}>Cancel</Button>
                           </Box>
                         </form>
@@ -233,9 +240,7 @@ const Project = () => {
                   <Box name='request-box' px='8' py='6' mb='4' justifyContent='center' display='flex' colorScheme='purple' backgroundColor='gray.200' borderRadius='8'>
 
                     <Box name='join-today' display='flex' alignItems='center'>
-                      <Heading size='md'>Let's build today</Heading>
-
-                      <Box name='members' display='flex' mx='6'>
+                      <Box name='members' display='flex'>
                         <AvatarGroup display='flex' flexWrap='wrap'>
                           {project.members &&
                             project.members.map(member => {
@@ -250,11 +255,31 @@ const Project = () => {
                           }
                         </AvatarGroup>
                       </Box>
-                      {!(userIsAuthenticated() && userIsAuthenticatedOwnerOrMember(project) && project.members) ?
-                        < Button onClick={onOpen} px='8' colorScheme='purple'>Join the project</Button>
-                        :
-                        <></>
-                      }
+                      <>
+                        {!userIsAuthenticated() ?
+                          <>
+                            <Heading size='md' mx='6'>Let's build today</Heading>
+                            <Button colorScheme='purple'>Sign up</Button>
+                          </>
+                          :
+                          <>
+                            {!userSentRequest(project) ?
+                              <>
+                                {(userIsAuthenticated() && userIsAuthenticatedOwnerOrMember(project) && project.members) ?
+                                  <Heading size='md' mx='6'>Post an update!</Heading>
+                                  :
+                                  <>
+                                    <Heading size='md' mx='6'>Let's build today</Heading>
+                                    <Button onClick={onOpen} px='8' colorScheme='purple' name="Request submitted" value="Do more">Join the project</Button>
+                                  </>
+                                }
+                              </>
+                              :
+                              <Heading size='md' mx='6'>Waiting for your Request to be approved</Heading>
+                            }
+                          </>
+                        }
+                      </>
                     </Box>
                   </Box>
 
@@ -277,7 +302,7 @@ const Project = () => {
                                 </Flex>
                               </Flex>
                               <Box>
-                                <Button onClick={handleAccept} value={owner.id} name='owner' requestId={id}>Accept</Button>
+                                <Button onClick={handleAccept} value={owner.id} name='owner' colorScheme='purple' requestId={id}>Accept</Button>
                               </Box>
                             </Flex>
                           )
@@ -302,7 +327,7 @@ const Project = () => {
                         <Textarea onChange={handlePostChange} type="text" name="text" placeholder='text' value={post.text} />
                       </FormControl>
                       <FormControl isRequired mt={6}>
-                        <FormLabel htmlFor='post_picture'>Add Project Image</FormLabel>
+                        <FormLabel htmlFor='post_picture'>Add a picture to your post</FormLabel>
                         <ImageUpload
                           value={post.post_picture}
                           name='post_picture'
@@ -311,7 +336,7 @@ const Project = () => {
                       </FormControl>
                       {/* Error + Button */}
                       {!imageUploading ?
-                        <Button type="submit" colorScheme='blue' width="full" mt={4}>Post</Button>
+                        <Button type="submit" colorScheme='purple' width="full" mt={4} name="Posted" value="Do more">Post</Button>
                         :
                         <Spinner mt='4' />
                       }

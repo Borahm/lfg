@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { Container, Heading, Avatar, AvatarGroup, Badge, Button, Spinner, Flex, Box, Text, Image } from '@chakra-ui/react'
+import { Container, Heading, Avatar, AvatarGroup, Badge, Button, Spinner, Image, Flex, Box, Text } from '@chakra-ui/react'
 import { getTokenFromLocalStorage, userIsAuthenticated } from './helper/auth'
 
 
@@ -42,8 +42,8 @@ const Home = () => {
                   const { id, title, project_image, status, tldr, owner, members } = project
                   return (
                     <Link to={`/projects/${project.id}`} key={id}>
-                      <Flex name='project-box' w={['400px', '500px', '700px']} height='150px' borderWidth='1px' borderRadius='5' mb='5'>
-                        <Image src={project_image} alt='project image' borderLeftRadius='5' height='150px' />
+                      <Flex name='project-box' w={['400px', '500px', '700px']} borderWidth='1px' borderRadius='5' mb='5'>
+                        <Image src={project_image} mr='4' alt='project image' borderLeftRadius='5' height='150px' width='250px' objectFit='cover' />
                         <Box name='box-content' m='6'>
                           <Heading name='eventName' color='primary' size='md'>{title}</Heading>
                           <Badge mt='3' colorScheme='purple'>{status}</Badge>

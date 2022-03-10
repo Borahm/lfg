@@ -1,10 +1,11 @@
 import React from "react";
 import { Link, Box, Text, Button, Stack } from "@chakra-ui/react";
 import { MenuToggle } from './MenuToggle'
-import { userIsAuthenticated } from '../helper/auth'
 import { useNavigate } from "react-router-dom"
 import NavBarContainer from "./NavBarContainer"
 import axios from 'axios'
+import { getTokenFromLocalStorage, userIsAuthenticated } from '../helper/auth'
+
 
 
 import Logo from "./Logo";
@@ -75,6 +76,10 @@ const MenuLinks = ({ isOpen }) => {
 
   }
 
+  const redirectToRegister = () => {
+    if (!userIsAuthenticated) navigate('/register')
+  }
+
   return (
     <Box
       name="top"
@@ -90,7 +95,7 @@ const MenuLinks = ({ isOpen }) => {
         pt={[4, 4, 0, 0]}
         alignItems='center'
       >
-        <MenuItem to='/create'>Create project</MenuItem>
+
         {userIsAuthenticated() ?
           <Box name='subnav' w="100" display='flex' justifyContent='space-between'>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
@@ -98,19 +103,19 @@ const MenuLinks = ({ isOpen }) => {
           :
           <>
             <MenuItem to="/login">Login</MenuItem>
-            <MenuItem to="/register" isLast>
+            <MenuItem to="/register">Register</MenuItem>
+            <MenuItem to='/create' isLast>
               <Button
                 size="sm"
                 rounded="md"
-                color={["third", "third", "third", "third"]}
-                bg={["white", "white", "primary.500", "primary.500"]}
+                color={["white", "white", "white", "white"]}
+                bg={["purple.500", "purple.500", "primary.500", "primary.500"]}
                 _hover={{
                   bg: ["primary.100", "primary.100", "primary.600", "primary.600"]
                 }}
               >
-                Register
-              </Button>
-            </MenuItem>
+                Create project
+              </Button></MenuItem>
           </>
         }
       </Stack >

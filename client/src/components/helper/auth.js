@@ -34,6 +34,22 @@ export const userIsAuthenticatedProjectOwner = (project) => {
   // 
 }
 
+export const userSentRequest = (project) => {
+  const payload = getPayload()
+  console.log('payload ----->', payload)
+  console.log('project ----->', project)
+
+  if (payload && project.requests) {
+    if (project.requests.some(member => member.owner.id === payload.sub)) {
+      console.log("You are waiting for your request to be approved")
+      return true
+    } else {
+      console.log("You should join")
+      return false
+    }
+  }
+}
+
 export const userIsAuthenticatedOwnerOrMember = (project) => {
   const payload = getPayload()
   console.log('payload ----->', payload)
@@ -52,3 +68,4 @@ export const userIsAuthenticatedOwnerOrMember = (project) => {
     }
   }
 }
+

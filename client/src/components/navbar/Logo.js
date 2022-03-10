@@ -6,7 +6,7 @@ const Logo = (props) => {
     <Box {...props} >
       <Link href='/'>
         <Box width='100px'>
-          <Image src='https://res.cloudinary.com/dxd82e0ky/image/upload/v1646843704/lfg/LFG-logos_black_u9qap2.png' alt='logo' />
+          <Image src='https://res.cloudinary.com/dxd82e0ky/image/upload/v1646922268/lfg/Group_v4lne9.png' alt='logo' />
         </Box>
       </Link>
     </Box>

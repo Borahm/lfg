@@ -3,19 +3,22 @@ import {
   Flex,
   Box,
   Heading,
+  Text,
   FormControl,
   FormLabel,
   Input,
+  Link,
   Button,
   Alert
 } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link as RouterLink } from 'react-router-dom'
+
 import axios from 'axios'
 
 
 const Login = () => {
 
-  let navigate = useNavigate()
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     email: '',
@@ -51,12 +54,16 @@ const Login = () => {
   }
 
   return (
-    <><Flex width="full" align="center" justifyContent="center" mt='10'>
+    <><Flex width="full" align="center" justifyContent="center" mt='20'>
       <Box background='white' p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="2xl">
         <>
           <Box textAlign="center">
-            <Heading>Login</Heading>
+            <Heading size='lg' mt='5'>Login</Heading>
+            <Flex justifyContent="center" mt='4'>
+              <Text color='gray.500' mr='2'>Not a user yet?</Text><Link color="purple.500" as={RouterLink} to='/register'>Sign up here</Link>
+            </Flex>
           </Box>
+
           <Box my={4} textAlign="left">
             {/* Email */}
             <form onSubmit={handleSubmit}>
@@ -71,10 +78,12 @@ const Login = () => {
               </FormControl>
               {/* Error + Button */}
               {formError && <Alert status='error' mt={4}>{formError}</Alert>}
-              <Button colorScheme='blue' type="submit" width="full" mt={4}>Login</Button>
+              <Button colorScheme='purple' type="submit" width="full" mt={4}>Login</Button>
             </form>
           </Box>
         </>
+      </Box>
+      <Box width='100%' height='100vh' zIndex='-1' position='absolute' top='0' left='0' opacity='100%' bgGradient='radial( purple.700, purple.200)' >
       </Box>
     </Flex>
     </>

@@ -7,12 +7,14 @@ import {
   FormLabel,
   Image,
   Input,
+  Link,
+  Text,
   Button,
   Alert,
   AlertIcon,
   Spinner
 } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link as RouterLink } from 'react-router-dom'
 import axios from 'axios'
 import { Select } from '@chakra-ui/react'
 import { ImageUpload } from '../helper/ImageUpload'
@@ -90,12 +92,16 @@ const Register = () => {
   }
 
   return (
-    <><Flex width="full" align="center" justifyContent="center" mt='10'>
+    <><Flex width="full" align="center" justifyContent="center" mt='20'>
       <Box background='white' p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="2xl">
         <>
           <Box textAlign="center">
-            <Heading>Register</Heading>
+            <Heading size='lg' mt='5'>Register</Heading>
+            <Flex justifyContent="center" mt='4'>
+              <Text color='gray.500' mr='2'>Already a user?</Text><Link color="purple.500" as={RouterLink} to='/login'>Login now</Link>
+            </Flex>
           </Box>
+
           <Box my={4} textAlign="left">
             <form onSubmit={handleSubmit}>
               {/* FirstName */}
@@ -163,7 +169,7 @@ const Register = () => {
               </FormControl>
               {/* Error + Button */}
               {!imageUploading ?
-                <Button type="submit" colorScheme='blue' width="full" mt={4}>Register</Button>
+                <Button type="submit" colorScheme='purple' width="full" mt={4}>Register</Button>
                 :
                 <Spinner mt='4' />
               }
@@ -177,6 +183,8 @@ const Register = () => {
             </form>
           </Box>
         </>
+      </Box>
+      <Box width='100%' height='100vh' zIndex='-1' position='absolute' top='0' left='0' opacity='100%' bgGradient='radial( purple.700, purple.200)' >
       </Box>
     </Flex>
     </>
