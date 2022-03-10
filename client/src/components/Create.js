@@ -112,7 +112,7 @@ const Create = () => {
                   <Image src='https://res.cloudinary.com/dxd82e0ky/image/upload/v1646922268/lfg/Group_v4lne9.png' alt='logo' />
                 </Box>
                 <Heading size='lg' mt='8'>Create project</Heading>
-                <Text mt='2' color='gray.500'>Find other developers and designer to collaborate </Text>
+                <Text mt='2' color='text'>Find other developers and designer to collaborate </Text>
               </Flex>
             </Box>
             <Box my={4} textAlign="left">
@@ -170,7 +170,7 @@ const Create = () => {
             </Box>
           </>
         </Box>
-        <Box width='100%' height='100vh' zIndex='-1' position='absolute' top='0' left='0' opacity='100%' bgGradient='radial( purple.700, purple.200)' >
+        <Box width='100%' height='100vh' zIndex='-1' position='absolute' top='0' left='0' opacity='100%' bgGradient='radial( accent, white)' >
         </Box>
       </Flex>
 

@@ -27,7 +27,7 @@ const Register = () => {
     first_name: '',
     last_name: '',
     email: '',
-    username: '',
+    profile: '',
     course_location: '',
     course_number: '',
     password: '',
@@ -40,7 +40,7 @@ const Register = () => {
     first_name: '',
     last_name: '',
     email: '',
-    username: '',
+    profile: '',
     course_location: '',
     course_number: '',
     password: '',
@@ -92,72 +92,79 @@ const Register = () => {
   }
 
   return (
-    <><Flex width="full" align="center" justifyContent="center" mt='20'>
-      <Box background='white' p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="2xl">
+    <><Flex align="center" justifyContent="center" mt='20'>
+      <Box background='white' p={8} maxWidth="600px" borderWidth={1} borderRadius={8} boxShadow="2xl">
         <>
           <Box textAlign="center">
             <Heading size='lg' mt='5'>Register</Heading>
-            <Flex justifyContent="center" mt='4'>
-              <Text color='gray.500' mr='2'>Already a user?</Text><Link color="purple.500" as={RouterLink} to='/login'>Login now</Link>
+            <Flex justifyContent="center" mt='2'>
+              <Text color='text' mr='2'>Already a user?</Text><Link color="accent" as={RouterLink} to='/login'>Login now</Link>
             </Flex>
           </Box>
-
           <Box my={4} textAlign="left">
             <form onSubmit={handleSubmit}>
               {/* FirstName */}
-              <FormControl isRequired>
-                <FormLabel htmlFor='firstName' mb='1'>First name</FormLabel>
-                <Input onChange={handleChange} type="first_name" name="first_name" placeholder='First name' defaultValue={formData.first_name} />
-                {formError.first_name && <Alert status='error' mt={4}>{formError.first_name}</Alert>}
-              </FormControl>
-              {/* last_name */}
-              <FormControl isRequired>
-                <FormLabel htmlFor='last_name' mb='1' mt={2}>last_name</FormLabel>
-                <Input onChange={handleChange} type="last_name" name="last_name" placeholder='last_name' defaultValue={formData.last_name} />
-                {formError.last_name && <Alert status='error' mt={4}>{formError.last_name}</Alert>}
-              </FormControl>
-              {/* Username */}
-              <FormControl isRequired>
-                <FormLabel htmlFor='username' mb='1' mt={2}>username</FormLabel>
-                <Input onChange={handleChange} type="username" name="username" placeholder='username' defaultValue={formData.username} />
-                {formError.username && <Alert status='error' mt={4}>{formError.username}</Alert>}
-              </FormControl>
-              {/* Course Number */}
-              <FormControl isRequired>
-                <FormLabel htmlFor='course_number' mb='1' mt={2}>course_number</FormLabel>
-                <Input type='number' onChange={handleChange} placeholder='course_number' name="course_number" />
-
-
-
-              </FormControl>
-              {/* Course Location */}
-              <FormControl isRequired>
-                <FormLabel htmlFor='course_location' mb='1' mt={2}>course_location</FormLabel>
-                <Select onChange={handleChange} placeholder='Course location' name="course_location">
-                  <option value='REMOTE' name="course_location">Remote</option>
-                  <option value='LONDON' name="course_location">London</option>
-                  <option value='DENVER' name="course_location">Denver</option>
+              <Flex>
+                <FormControl isRequired mr='4'>
+                  <FormLabel htmlFor='firstName' mb='1'>First name</FormLabel>
+                  <Input onChange={handleChange} type="first_name" name="first_name" placeholder='First name' defaultValue={formData.first_name} />
+                  {formError.first_name && <Alert status='error' mt={4}>{formError.first_name}</Alert>}
+                </FormControl>
+                {/* last_name */}
+                <FormControl isRequired>
+                  <FormLabel htmlFor='last_name' mb='1'>Last name</FormLabel>
+                  <Input onChange={handleChange} type="last_name" name="last_name" placeholder='last_name' defaultValue={formData.last_name} />
+                  {formError.last_name && <Alert status='error' mt={4}>{formError.last_name}</Alert>}
+                </FormControl>
+              </Flex>
+              {/* Profile */}
+              <FormControl isRequired mt='2'>
+                <FormLabel htmlFor='profile' mb='1' mt={2}>Profile</FormLabel>
+                <Select onChange={handleChange} placeholder='Profile' name="profile">
+                  <option value='Engineer' name="profile">Software Engineer</option>
+                  <option value='Designer' name="profile">Designer</option>
+                  <option value='Product' name="profile">Product Manager</option>
+                  <option value='Other' name="profile">Other</option>
                 </Select>
               </FormControl>
+              <Flex mt='2'>
+                {/* Course Location */}
+                <FormControl isRequired mr='4'>
+                  <FormLabel htmlFor='course_location' mb='1' mt={2}>Course_location</FormLabel>
+                  <Select onChange={handleChange} placeholder='Course location' name="course_location">
+                    <option value='Remote' name="course_location">Remote</option>
+                    <option value='London' name="course_location">London</option>
+                    <option value='Denver' name="course_location">Denver</option>
+                  </Select>
+                </FormControl>
+                {/* Course Number */}
+                <FormControl isRequired>
+                  <FormLabel htmlFor='course_number' mb='1' mt={2}>Course number</FormLabel>
+                  <Input type='number' onChange={handleChange} placeholder='61' name="course_number" />
+                </FormControl>
+
+              </Flex>
               {/* Email */}
-              <FormControl isRequired>
+              <FormControl isRequired mt='2'>
                 <FormLabel htmlFor='email' mt={2} mb='1'>Email</FormLabel>
                 <Input onChange={handleChange} type="email" name="email" placeholder='Email' defaultValue={formData.email} />
                 {formError.email && <Alert status='error' mt={4}>{formError.email}</Alert>}
               </FormControl>
-              {/* Password */}
-              <FormControl isRequired mt={2} mb='1'>
-                <FormLabel htmlFor='password'>Password</FormLabel>
-                <Input onChange={handleChange} type="password" name="password" placeholder='Password' defaultValue={formData.password} />
-                {formError.password && <Alert status='error' mt={4}>{formError.password}</Alert>}
-              </FormControl>
-              {/* Password Confirmation */}
+              <Flex>
+                {/* Password */}
+                <FormControl isRequired mt={2} mb='1' mr='4'>
+                  <FormLabel htmlFor='password'>Password</FormLabel>
+                  <Input onChange={handleChange} type="password" name="password" placeholder='Password' defaultValue={formData.password} />
+                  {formError.password && <Alert status='error' mt={4}>{formError.password}</Alert>}
+                </FormControl>
+                {/* Password Confirmation */}
+                <FormControl isRequired mt={2}>
+                  <FormLabel htmlFor='password_confirmation'>Password Confirmation</FormLabel>
+                  <Input onChange={handleChange} type="password" name="password_confirmation" placeholder='Password Confirmation' defaultValue={formData.password_confirmation} />
+                  {formError.password_confirmation && <Alert status='error' mt={4}>{formError.password_confirmation}</Alert>}
+                </FormControl>
+              </Flex>
               <FormControl isRequired mt={2}>
-                <FormLabel htmlFor='password_confirmation'>Password Confirmation</FormLabel>
-                <Input onChange={handleChange} type="password" name="password_confirmation" placeholder='Password Confirmation' defaultValue={formData.password_confirmation} />
-                {formError.password_confirmation && <Alert status='error' mt={4}>{formError.password_confirmation}</Alert>}
-              </FormControl>
-              <FormControl isRequired mt={6}>
                 <FormLabel htmlFor='picture'>Add Profile Picture</FormLabel>
 
                 <ImageUpload
@@ -171,7 +178,7 @@ const Register = () => {
               {!imageUploading ?
                 <Button type="submit" colorScheme='purple' width="full" mt={4}>Register</Button>
                 :
-                <Spinner mt='4' />
+                <Spinner mt='2' />
               }
               {alert &&
                 <Alert status='error'>
@@ -184,7 +191,7 @@ const Register = () => {
           </Box>
         </>
       </Box>
-      <Box width='100%' height='100vh' zIndex='-1' position='absolute' top='0' left='0' opacity='100%' bgGradient='radial( purple.700, purple.200)' >
+      <Box width='100%' height='100vh' zIndex='-1' position='absolute' top='0' left='0' opacity='100%' bgGradient='radial( accent, white)' >
       </Box>
     </Flex>
     </>

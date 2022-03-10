@@ -6,13 +6,26 @@ import { ChakraProvider, extendTheme, Center, Container } from '@chakra-ui/react
 
 
 export const theme = extendTheme({
-  components: {
-    Toast: {
-      defaultProps: {
-        colorScheme: 'purple',
+  semanticTokens: {
+    colors: {
+      title: {
+        default: 'gray.700',
+        _dark: 'red.400'
       },
-    },
-  },
+      text: {
+        default: 'gray.600',
+        _dark: 'red.700'
+      },
+      background: {
+        default: 'gray.100',
+        _dark: 'red.700'
+      },
+      accent: {
+        default: 'purple.500',
+        _dark: 'red.700'
+      },
+    }
+  }
 })
 
 ReactDOM.render(

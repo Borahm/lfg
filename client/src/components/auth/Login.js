@@ -60,7 +60,7 @@ const Login = () => {
           <Box textAlign="center">
             <Heading size='lg' mt='5'>Login</Heading>
             <Flex justifyContent="center" mt='4'>
-              <Text color='gray.500' mr='2'>Not a user yet?</Text><Link color="purple.500" as={RouterLink} to='/register'>Sign up here</Link>
+              <Text color='text' mr='2'>Not a user yet?</Text><Link color="purple.500" as={RouterLink} to='/register'>Sign up here</Link>
             </Flex>
           </Box>
 
@@ -83,7 +83,7 @@ const Login = () => {
           </Box>
         </>
       </Box>
-      <Box width='100%' height='100vh' zIndex='-1' position='absolute' top='0' left='0' opacity='100%' bgGradient='radial( purple.700, purple.200)' >
+      <Box width='100%' height='100vh' zIndex='-1' position='absolute' top='0' left='0' opacity='100%' bgGradient='radial( accent, white)' >
       </Box>
     </Flex>
     </>
