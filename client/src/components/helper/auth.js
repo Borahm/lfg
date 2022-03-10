@@ -26,23 +26,29 @@ export const userIsAuthenticated = () => {
 export const userIsAuthenticatedProjectOwner = (project) => {
   const payload = getPayload()
   if (project.owner && payload) {
-    if (payload.sub != project.owner.id) return
+    if (project.owner.id === payload.sub) {
+      console.log("You are the owner")
+      return true
+    }
   }
   // 
-  if (!payload) return
-  const currentTime = Math.round(Date.now() / 1000)
-  return currentTime < payload.exp
 }
 
-// export const userIsAuthenticatedAndMember = (project) => {
-//   const payload = getPayload()
-//   if (project.project_members && payload) {
-//     project.project_members.some(member => member.owner.id == payload.sub)
-//     elif(payload.sub != project.owner.id)
-//     return True
-//   }
-//   // 
-//   if (!payload) return
-//   const currentTime = Math.round(Date.now() / 1000)
-//   return currentTime < payload.exp
-// }
+export const userIsAuthenticatedOwnerOrMember = (project) => {
+  const payload = getPayload()
+  console.log('payload ----->', payload)
+  console.log('project ----->', project)
+
+  if (payload && project.owner && project.members) {
+    if (project.owner.id === payload.sub) {
+      console.log('You are the owner')
+      return true
+    } if (project.members.some(member => member.owner.id === payload.sub)) {
+      console.log("You are a member")
+      return true
+    } else {
+      console.log("You should join")
+      return false
+    }
+  }
+}
